@@ -15,7 +15,19 @@ class CreateVendorsTable extends Migration
     {
         Schema::create('vendors', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamps();
+            $table->integer('user_type_id')->unsigned()->nullable();
+            $table->integer('vendor_category_id')->unsigned()->nullable();
+            $table->string('name')->nullable()->nullable();
+            $table->string('firstname')->nullable();
+            $table->string('lastname')->nullable();
+            $table->string('address')->nullable();
+            $table->integer('phone')->nullable();
+            $table->string('email')->nullable();
+            $table->string('password')->nullable();
+            $table->integer('city_id')->unsigned()->nullable();
+            $table->integer('status')->nullable()->default(1);
+            $table->string('slug')->nullable();
+            $table->timestamps();         
         });
     }
 

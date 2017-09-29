@@ -15,3 +15,4 @@ define("TBL_STATE","states");
 define("TBL_CITY","cities");
 define("TBL_USER_TYPES","user_types");
 define("TBL_VENDOR_CATEGORY","vendor_categories");
+define("TBL_VENDOR","vendors");

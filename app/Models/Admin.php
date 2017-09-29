@@ -90,6 +90,8 @@ class Admin extends Authenticatable
     public static $ADD_VENDOR = 48;
     public static $EDIT_VENDOR = 49;
     public static $DELETE_VENDOR = 50;
+    public static $VIEW_VENDOR = 51;
+    public static $CHANGE_VENDOR_STATUS = 52;
 
     /**
      * check page acces permissions

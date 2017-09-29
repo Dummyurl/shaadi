@@ -80,6 +80,25 @@ class CitiesController extends Controller
         echo $options;exit;       
         
     }
+    public function getcities(Request $request){
+        
+        
+        $data = array();   
+
+        $getcities = City::where('state_id', $request->state_id)->pluck("title","id");
+        $options = "";
+        
+        if(!empty($getcities) && count($getcities) != 0){
+            $options .= "<option value=''>select City</option>";
+            foreach ($getcities as $key => $city) {
+                    $options .= "<option value='$key'>$city</option>";
+            }
+        }else{
+            $options .= "<option value=''>No Cities</option>";
+        }
+        echo $options;exit;       
+        
+    }
 
             
 
@@ -103,7 +122,8 @@ class CitiesController extends Controller
         $data['action_params'] = 0;
         $data['buttonText'] = "Save";
         $data["method"] = "POST";
-        
+
+        $data['cityList'] = City::pluck("title","id")->all();              
         $data['stateList'] = State::pluck("title","id")->all(); 
         $data['countryList'] = Country::pluck("title","id")->all(); 
         

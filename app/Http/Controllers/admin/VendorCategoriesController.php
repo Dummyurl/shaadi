@@ -324,11 +324,11 @@ class VendorCategoriesController extends Controller
             })             
             ->filter(function ($query) 
             {                                                    
-                $user_type = request()->get("user_type"); 
+                $search_title = request()->get("search_title"); 
                                       
-                if(!empty($user_type))
+                if(!empty($search_title))
                 {
-                    $query = $query->where("title", 'LIKE', '%'.$user_type.'%');
+                    $query = $query->where("title", 'LIKE', '%'.$search_title.'%');
                 }  
             })
             ->make(true);        

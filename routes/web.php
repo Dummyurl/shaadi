@@ -72,6 +72,7 @@ Route::group(['prefix' => $ADMIN_PREFIX], function(){
 	Route::any('cities/data', 'admin\CitiesController@data')->name('cities.data');
 	Route::resource('cities', 'admin\CitiesController');        
 	Route::any('cities/getstates', 'admin\CitiesController@getstates')->name('getstates');
+	Route::any('cities/getcities', 'admin\CitiesController@getcities')->name('getcities');
 
 	Route::any('admin-users/data', 'admin\AdminUserController@data')->name('admin-users.data');
 	Route::resource('admin-users', 'admin\AdminUserController'); 
@@ -81,10 +82,11 @@ Route::group(['prefix' => $ADMIN_PREFIX], function(){
 
  	Route::any('user-types/data', 'admin\UserTypesController@data')->name('user-types.data');
  	Route::resource('user-types', 'admin\UserTypesController');
-
  	Route::any('vendor-categories/data', 'admin\VendorCategoriesController@data')->name('vendor-categories.data');
  	Route::resource('vendor-categories', 'admin\VendorCategoriesController');
 
+	Route::any('vendors/change-status/{id}/{status}', 'admin\VendorsController@changeStatus');
+	Route::any('vendors/view', 'admin\VendorsController@viewData');
 	Route::any('vendors/data', 'admin\VendorsController@data')->name('vendors.data');
  	Route::resource('vendors', 'admin\VendorsController');        
     });    
