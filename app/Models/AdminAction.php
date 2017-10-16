@@ -81,4 +81,6 @@ class AdminAction extends Model
     public $EDIT_VENDOR = 37;   
     public $DELETE_VENDOR = 38;   
     public $CHANGE_VENDOR_STATUS = 39;   
+    
+    public $ADD_PORTFOLIOS = 40;   
 }

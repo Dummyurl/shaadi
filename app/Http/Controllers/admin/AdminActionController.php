@@ -10,7 +10,7 @@ use App\modells\AdminLog;
 use App\Models\AdminAction;
 use App\Models\AdminGroupPage;
 class AdminActionController extends Controller
-{
+{ 
     public function __construct() {
 
         $this->moduleRouteText = "admin-actions";
@@ -20,7 +20,7 @@ class AdminActionController extends Controller
         $module = "Admin Action";
         $this->module = $module;  
 
-        $this->adminAction= new AdminAction; 
+        $this->adminAction = new AdminAction; 
         
         $this->modelObj = new AdminAction();  
 

@@ -88,6 +88,18 @@ Route::group(['prefix' => $ADMIN_PREFIX], function(){
 	Route::any('vendors/change-status/{id}/{status}', 'admin\VendorsController@changeStatus');
 	Route::any('vendors/view', 'admin\VendorsController@viewData');
 	Route::any('vendors/data', 'admin\VendorsController@data')->name('vendors.data');
- 	Route::resource('vendors', 'admin\VendorsController');        
+ 	Route::resource('vendors', 'admin\VendorsController');
+
+ 	//Portfolio  
+ 	Route::get('portfolio/data', 'admin\PortfolioController@data')->name('portfolio.data');
+    Route::resource('portfolio', 'admin\PortfolioController');
+
+    //PortfolioCategory
+    Route::get('portfoliocategory/data', 'admin\PortfolioCategoriesController@data')->name('portfoliocategory.data');
+    Route::resource('portfoliocategory', 'admin\PortfolioCategoriesController');
+ 	
+ 	Route::any('email/data', 'admin\EmailTemplateController@data')->name('email.data');
+ 	Route::resource('email', 'admin\EmailTemplateController');
+
     });    
 });

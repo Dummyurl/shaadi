@@ -123,5 +123,81 @@ class Admin extends Authenticatable
             $status = 1;
         }
         return $status;
-    }   
+    }
+
+    public static function sendHtmlMail($array)
+    {
+        $from_address = "phpdots1@gmail.com";
+        $from_address = env("MAIL_USERNAME");
+        
+        $from_address_name = "PHPDots";
+        $reply_to = "phpdots1@gmail.com";
+
+        $bccEmails = ["phpdots1@gmail.com"];
+        
+
+        if(isset($array['reply_to']))
+        {
+            $reply_to = $array['reply_to'];
+        }
+
+        $toEmails[] = $array['to'];   
+
+        if(isset($array['ccEmails']))
+        {
+            foreach($array['ccEmails'] as $em)
+            {
+                $toEmails[] =  $em;
+            }
+        }
+
+        $array['from_address'] = $from_address;
+        $array['to_emails'] = $toEmails;
+        $array['bccEmails'] = $bccEmails;
+
+       \Mail::send('emails.index', $array, function($message) use ($array)
+       {
+           $message->from($array['from_address'], "Dental Insider");            
+           $message->sender($array['from_address'], "Dental Insider");
+           $message->to($array['to'], '')->subject($array['subject']);
+
+            if(isset($array['ccEmails']))
+            {
+                foreach($array['ccEmails'] as $em)
+                {
+                    $message->cc($em, '');
+                }
+            }
+
+            if(isset($array['bccEmails']))
+            {
+                foreach($array['bccEmails'] as $em)
+                {
+                    $message->bcc($em, 'SDU');
+                }
+            }
+
+       });        
+
+       $ccEmailsTemp = "";
+
+        if(isset($array['ccEmails']))
+        {
+            $ccEmailsTemp = implode(",", $array['ccEmails']);
+        }
+
+        $dataToInsert = [
+            'to_email' => $array['to'],
+            'cc_emails' => $ccEmailsTemp,
+            'bcc_emails' => implode(",", $bccEmails),
+            'from_email' => $from_address,
+            'email_subject' => $array['subject'],
+            'email_body' => $array['body'],
+            'status' => 'sent',            
+            'created_at' => \DB::raw('NOW()'),
+            'updated_at' => \DB::raw('NOW()')
+        ];
+
+        \DB::table(TBL_EMAIL_SENT)->insert($dataToInsert);       
+    }  
 }
