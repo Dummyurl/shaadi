@@ -25,7 +25,8 @@
                 <div class="col-md-4">
                     <label class="control-label">Category</label>
                     {!! Form::select('search_Category', [''=>'Search Category'] + $Category, Request::get("search_Category"), ['class' => 'form-control']) !!}                                      
-                </div>              
+                </div>   
+                <div class="clearfix">&nbsp;</div>           
                 <div class="col-md-4">
                     <label class="control-label">Title</label>
                     <input type="text" value="{{ \Request::get("search_title") }}" class="form-control" name="search_title" />
