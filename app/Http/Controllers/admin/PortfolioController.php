@@ -43,6 +43,12 @@ class PortfolioController extends Controller
      */
     public function index() 
     {
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$LIST_PORTFOLIO);
+        
+        if($checkrights) 
+        {
+            return $checkrights;
+        }
         
         $data = array();        
         $data['page_title'] = "Manage Portfolio";
@@ -61,6 +67,12 @@ class PortfolioController extends Controller
      */
     public function create()
     {
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$ADD_PORTFOLIOS);
+        
+        if($checkrights) 
+        {
+            return $checkrights;
+        }
                 
         $data = array();
         $data['formObj'] = $this->modelObj;
@@ -81,6 +93,12 @@ class PortfolioController extends Controller
      */
     public function store(Request $request)
     {
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$ADD_PORTFOLIOS);
+        
+        if($checkrights) 
+        {
+            return $checkrights;
+        } 
 
         $status = 1;
         $msg = $this->addMsg;
@@ -127,6 +145,17 @@ class PortfolioController extends Controller
             $image_record->title=$title;            
             $image_record->save();
 
+            $id = $image_record->id;
+            //store logs detail
+            $params=array();    
+                                    
+            $params['adminuserid']  = \Auth::guard('admins')->id();
+            $params['actionid']     = $this->adminAction->ADD_PORTFOLIOS ;
+            $params['actionvalue']  = $id;
+            $params['remark']       = "Add Portfolio::".$id;
+                                    
+            $logs=\App\Models\AdminLog::writeadminlog($params);
+
             session()->flash('success_message', $msg);           
             
         }
@@ -153,6 +182,12 @@ class PortfolioController extends Controller
      */
     public function edit($id)
     {
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$EDIT_PORTFOLIOS);
+        
+        if($checkrights) 
+        {
+            return $checkrights;
+        } 
 
         $formObj = $this->modelObj->find($id);
 
@@ -183,7 +218,12 @@ class PortfolioController extends Controller
      */
     public function update(Request $request, $id)
     {
-       
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$EDIT_PORTFOLIOS);
+        
+        if($checkrights) 
+        {
+            return $checkrights;
+        }  
 
         $model = $this->modelObj->find($id);
 
@@ -229,6 +269,16 @@ class PortfolioController extends Controller
             $image_record->title=$title;            
             $image_record->save();
 
+            //store logs detail
+            $params=array();    
+                                    
+            $params['adminuserid']  = \Auth::guard('admins')->id();
+            $params['actionid']     = $this->adminAction->EDIT_PORTFOLIOS ;
+            $params['actionvalue']  = $id;
+            $params['remark']       = "Edit Portfolio::".$id;
+                                    
+            $logs=\App\Models\AdminLog::writeadminlog($params);
+
                      
         }
         
@@ -242,10 +292,16 @@ class PortfolioController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id,Request $request)
+    public function destroy($id, Request $request)
     {
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$DELETE_PORTFOLIOS);
         
-        $modelObj = $this->modelObj->find($id); 
+        if($checkrights) 
+        {
+            return $checkrights;
+        }
+        
+         $modelObj = $this->modelObj->find($id); 
 
         if($modelObj) 
         {
@@ -253,7 +309,17 @@ class PortfolioController extends Controller
             {             
                 $backUrl = $request->server('HTTP_REFERER');
                 $modelObj->delete();
-                session()->flash('success_message', $this->deleteMsg);                 
+                session()->flash('success_message', $this->deleteMsg); 
+
+                //store logs detail
+                $params=array();
+                
+                $params['adminuserid']  = \Auth::guard('admins')->id();
+                $params['actionid']     = $this->adminAction->DELETE_PORTFOLIOS;
+                $params['actionvalue']  = $id;
+                $params['remark']       = "Delete Portfolio::".$id;
+
+                $logs=\App\Models\AdminLog::writeadminlog($params);     
 
                 return redirect($backUrl);
             } 
@@ -273,6 +339,12 @@ class PortfolioController extends Controller
     
     public function data(Request $request)
     {
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$LIST_PORTFOLIO);
+        
+        if($checkrights) 
+        {
+            return $checkrights;
+        }
 
         $model = Portfolio::select(TBL_PORTFOLIOS.".*",TBL_PORTFOLIOS_CATEGORIES.".title as category_title")
                 ->join(TBL_PORTFOLIOS_CATEGORIES,TBL_PORTFOLIOS_CATEGORIES.".id","=",TBL_PORTFOLIOS.".category_id");

@@ -92,6 +92,18 @@ class Admin extends Authenticatable
     public static $DELETE_VENDOR = 50;
     public static $VIEW_VENDOR = 51;
     public static $CHANGE_VENDOR_STATUS = 52;
+    
+    public static $LIST_PORTFOLIO = 53;
+    public static $ADD_PORTFOLIOS = 54;
+    public static $EDIT_PORTFOLIOS = 55;
+    public static $DELETE_PORTFOLIOS = 56;
+
+    public static $LIST_PORTFOLIO_CATEGORIES = 57;
+    public static $ADD_PORTFOLIO_CATEGORIES = 58;
+    public static $EDIT_PORTFOLIO_CATEGORIES = 59;
+    public static $DELETE_PORTFOLIO_CATEGORIES = 60;
+
+
 
     /**
      * check page acces permissions

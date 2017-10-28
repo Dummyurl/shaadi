@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Models\PortfolioCategory;
 use Validator;
 use Datatables;
+use App\models\AdminLog;
+use App\Models\AdminAction;
 
 class PortfolioCategoriesController extends Controller
 {
@@ -18,8 +20,10 @@ class PortfolioCategoriesController extends Controller
 
         $module = "Portfolio";
         $this->module = $module;  
+
+        $this->adminAction= new AdminAction; 
         
-        $this->modelObj = new PortfolioCategory();  
+        $this->modelObj = new portfoliocategory();  
 
         $this->addMsg = $module . " has been added successfully!";
         $this->updateMsg = $module . " has been updated successfully!";
@@ -34,6 +38,13 @@ class PortfolioCategoriesController extends Controller
 
     public function index()
     {
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$LIST_PORTFOLIO_CATEGORIES);
+        
+        if($checkrights) 
+        {
+            return $checkrights;
+        }
+        
         $data = array();        
         $data['page_title'] = "Manage PortfolioCategory";
 
@@ -50,6 +61,13 @@ class PortfolioCategoriesController extends Controller
      */
     public function create()
     {
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$ADD_PORTFOLIO_CATEGORIES);
+        
+        if($checkrights) 
+        {
+            return $checkrights;
+        }
+
         $data = array();
         $data['formObj'] = $this->modelObj;
         $data['page_title'] = "Add".$this->module;
@@ -69,6 +87,13 @@ class PortfolioCategoriesController extends Controller
      */
     public function store(Request $request)
     {
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$ADD_PORTFOLIO_CATEGORIES);
+        
+        if($checkrights) 
+        {
+            return $checkrights;
+        }
+
         $status = 1;
         $msg = $this->addMsg;
         $data = array();
@@ -97,7 +122,15 @@ class PortfolioCategoriesController extends Controller
             $obj = $this->modelObj->create($input);
             $id = $obj->id;
 
-            
+            //store logs detail
+            $params=array();    
+                                    
+            $params['adminuserid']  = \Auth::guard('admins')->id();
+            $params['actionid']     = $this->adminAction->ADD_PORTFOLIO_CATEGORIES ;
+            $params['actionvalue']  = $id;
+            $params['remark']       = "Add Portfolio Categories::".$id;
+                                    
+            $logs=\App\Models\AdminLog::writeadminlog($params);
 
             session()->flash('success_message', $msg);           
             
@@ -126,6 +159,13 @@ class PortfolioCategoriesController extends Controller
      */
     public function edit($id)
     {
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$EDIT_PORTFOLIO_CATEGORIES);
+        
+        if($checkrights) 
+        {
+            return $checkrights;
+        }
+
         $formObj = $this->modelObj->find($id);
 
         if(!$formObj)
@@ -154,6 +194,13 @@ class PortfolioCategoriesController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$EDIT_PORTFOLIO_CATEGORIES);
+        
+        if($checkrights) 
+        {
+            return $checkrights;
+        }
+
         $model = $this->modelObj->find($id);
 
         $status = 1;
@@ -188,6 +235,15 @@ class PortfolioCategoriesController extends Controller
             $input = $request->all();
             $model->update($input); 
 
+           //store logs detail
+                $params=array();
+                
+                $params['adminuserid']  = \Auth::guard('admins')->id();
+                $params['actionid']     = $this->adminAction->EDIT_PORTFOLIO_CATEGORIES;
+                $params['actionvalue']  = $id;
+                $params['remark']       = "Edit Portfolio Categories::".$id;
+
+                $logs=\App\Models\AdminLog::writeadminlog($params); 
              
         }
         
@@ -202,6 +258,13 @@ class PortfolioCategoriesController extends Controller
      */
     public function destroy($id, Request $request)
     {
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$DELETE_PORTFOLIO_CATEGORIES);
+        
+        if($checkrights) 
+        {
+            return $checkrights;
+        }
+
         $modelObj = $this->modelObj->find($id); 
 
         if($modelObj) 
@@ -211,6 +274,16 @@ class PortfolioCategoriesController extends Controller
                 $backUrl = $request->server('HTTP_REFERER');
                 $modelObj->delete();
                 session()->flash('success_message', $this->deleteMsg); 
+
+                //store logs detail
+                $params=array();
+                
+                $params['adminuserid']  = \Auth::guard('admins')->id();
+                $params['actionid']     = $this->adminAction->DELETE_PORTFOLIO_CATEGORIES;
+                $params['actionvalue']  = $id;
+                $params['remark']       = "Delete Portfolio Categories::".$id;
+
+                $logs=\App\Models\AdminLog::writeadminlog($params);
 
                
                 return redirect($backUrl);
@@ -229,6 +302,12 @@ class PortfolioCategoriesController extends Controller
     }
     public function data(Request $request)
     {
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$LIST_PORTFOLIO_CATEGORIES);
+        
+        if($checkrights) 
+        {
+            return $checkrights;
+        }
 
         return Datatables::of(PortfolioCategory::query())        
         
