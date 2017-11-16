@@ -102,6 +102,9 @@ Route::group(['prefix' => $ADMIN_PREFIX], function(){
  	Route::get('package-category/data', 'admin\PackageCategoryController@data')->name('package-category.data');
     Route::resource('package-category', 'admin\PackageCategoryController');
 
+	Route::get('package/data', 'admin\PackageController@data')->name('package.data');
+    Route::resource('package', 'admin\PackageController');
+
  	Route::any('email/data', 'admin\EmailTemplateController@data')->name('email.data');
  	Route::resource('email', 'admin\EmailTemplateController');
 
