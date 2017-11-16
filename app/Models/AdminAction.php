@@ -89,4 +89,8 @@ class AdminAction extends Model
     public $ADD_PORTFOLIO_CATEGORIES = 43;   
     public $EDIT_PORTFOLIO_CATEGORIES = 44;   
     public $DELETE_PORTFOLIO_CATEGORIES = 45;   
+    
+    public $ADD_PACKAGE_CATEGORIES = 46;   
+    public $EDIT_PACKAGE_CATEGORIES = 47;   
+    public $DELETE_PACKAGE_CATEGORIES = 48;   
 }
