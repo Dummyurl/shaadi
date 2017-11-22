@@ -19,10 +19,15 @@
                     </div>
                 </div> 
                 <div class="col-md-4">
+                    <label class="control-label">Package</label>
+                    {!! Form::select('search_package', [''=>'Search Package'] + $Package, Request::get("search_package"), ['class' => 'form-control']) !!}                                      
+                </div>             
+                <div class="col-md-4">
                     <label class="control-label">Title</label>
                     <input type="text" value="{{ \Request::get("search_title") }}" class="form-control" name="search_title" />
                 </div>
-                <div class="col-md-4"><center>                  
+                <div class="clearfix">&nbsp;</div>
+                <div class="col-md-12"><center>                  
                     <input type="submit" class="btn blue mTop25" value="Search"/>
                     &nbsp;
                     <a href="{{ $list_url }}" class="btn red mTop25">Reset</a></center>                               

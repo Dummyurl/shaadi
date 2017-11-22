@@ -98,10 +98,11 @@ Route::group(['prefix' => $ADMIN_PREFIX], function(){
     Route::get('portfoliocategory/data', 'admin\PortfolioCategoriesController@data')->name('portfoliocategory.data');
     Route::resource('portfoliocategory', 'admin\PortfolioCategoriesController');
  	
-
+    //PackageCategory
  	Route::get('package-category/data', 'admin\PackageCategoryController@data')->name('package-category.data');
     Route::resource('package-category', 'admin\PackageCategoryController');
 
+    //Packge
 	Route::get('package/data', 'admin\PackageController@data')->name('package.data');
     Route::resource('package', 'admin\PackageController');
 

@@ -93,4 +93,8 @@ class AdminAction extends Model
     public $ADD_PACKAGE_CATEGORIES = 46;   
     public $EDIT_PACKAGE_CATEGORIES = 47;   
     public $DELETE_PACKAGE_CATEGORIES = 48;   
+    
+    public $ADD_PACKAGES = 49;   
+    public $EDIT_PACKAGES = 50;   
+    public $DELETE_PACKAGES = 51;   
 }

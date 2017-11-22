@@ -80,7 +80,7 @@ class PortfolioController extends Controller
         $data['action_url'] = $this->moduleRouteText.".store";
         $data['action_params'] = 0;
         $data['buttonText'] = "Save";
-        $data["method"] = "POST"; 
+        $data['method'] = "POST"; 
         $data['Category'] = PortfolioCategory::pluck("title","id")->all();
         return view($this->moduleViewName.'.add', $data);
     }

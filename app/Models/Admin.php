@@ -107,6 +107,11 @@ class Admin extends Authenticatable
     public static $ADD_PACKAGE_CATEGORIES = 62;
     public static $EDIT_PACKAGE_CATEGORIES = 63;
     public static $DELETE_PACKAGE_CATEGORIES = 64;
+    
+    public static $LIST_PACKAGES = 65;
+    public static $ADD_PACKAGES = 66;
+    public static $EDIT_PACKAGES = 67;
+    public static $DELETE_PACKAGES = 68;
 
 
 
