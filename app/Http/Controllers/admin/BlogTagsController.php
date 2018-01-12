@@ -3,73 +3,73 @@
 namespace App\Http\Controllers\admin;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Validator;
+use App\Http\Controllers\Controller;
+use App\Models\BlogTag;
 use Datatables;
-use App\modells\AdminLog;
+use App\Models\AdminLog;
 use App\Models\AdminAction;
-use App\Models\AdminGroupPage;
-class AdminActionController extends Controller
+
+class BlogTagsController extends Controller
 {
     public function __construct() {
 
-        $this->moduleRouteText = "admin-actions";
-        $this->moduleViewName = "admin.admin_actions";
+        $this->moduleRouteText = "blog.tags";
+        $this->moduleViewName = "admin.BlogTags";
         $this->list_url = route($this->moduleRouteText.".index");
 
-        $module = "Admin Action";
+        $module = "Blog Tages";
         $this->module = $module;  
 
         $this->adminAction= new AdminAction; 
         
-        $this->modelObj = new AdminAction();  
-
+        $this->modelObj = new BlogTag();  
+      
         $this->addMsg = $module . " has been added successfully!";
         $this->updateMsg = $module . " has been updated successfully!";
         $this->deleteMsg = $module . " has been deleted successfully!";
-        $this->deleteErrorMsg = $module . " can not deleted!";       
+        $this->deleteErrorMsg = $module . " can not deleted!";
 
         view()->share("list_url", $this->list_url);
         view()->share("moduleRouteText", $this->moduleRouteText);
         view()->share("moduleViewName", $this->moduleViewName);
-    }
-
+    }    
+    
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {        
-        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$LIST_ADMIN_LOG_ACTIONS);
+    public function index(Request $request)
+    {   
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$LIST_BLOG_TAGES);
         
         if($checkrights) 
         {
             return $checkrights;
-        }
-
+        } 
         $data = array();        
-        $data['page_title'] = "Manage Admin Actions"; 
+        $data['page_title'] = "Blog Tags";
 
         $data['add_url'] = route($this->moduleRouteText.'.create');
-        $data['btnAdd'] = \App\Models\Admin::isAccess(\App\Models\Admin::$ADD_ADMIN_LOG_ACTIONS);
-
-        return view($this->moduleViewName.".index", $data);         
+        $data['btnAdd'] = \App\Models\Admin::isAccess(\App\Models\Admin::$ADD_BLOG_CATEGORY);                  
+        
+        return view($this->moduleViewName.".index", $data);     
     }
 
     /**
-     * Show the form for creating a new resource.   
+     * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {
-        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$ADD_ADMIN_LOG_ACTIONS);
+    {        
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$ADD_BLOG_TAGES);
         
         if($checkrights) 
         {
             return $checkrights;
-        }
+        }        
         
         $data = array();
         $data['formObj'] = $this->modelObj;
@@ -77,32 +77,33 @@ class AdminActionController extends Controller
         $data['action_url'] = $this->moduleRouteText.".store";
         $data['action_params'] = 0;
         $data['buttonText'] = "Save";
-        $data["method"] = "POST"; 
+        $data["method"] = "POST";
 
         return view($this->moduleViewName.'.add', $data);
     }
+    
+ 
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\m_responsekeys(conn, identifier)
+     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$ADD_ADMIN_LOG_ACTIONS);
+    {        
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$ADD_BLOG_TAGES);
         
         if($checkrights) 
         {
             return $checkrights;
-        }
-        
+        }               
         $status = 1;
         $msg = $this->addMsg;
         $data = array();
         
         $validator = Validator::make($request->all(), [
-            'description' => 'required|min:2',            
+            'title' => 'required|min:2',
         ]);
         
         // check validations
@@ -121,19 +122,17 @@ class AdminActionController extends Controller
         else
         {
             $input = $request->all();
-            $obj = $this->adminAction->create($input);
-            $id = $obj->id;                        
-            session()->flash('success_message', $msg);
+            $obj = $this->modelObj->create($input);
+            $id = $obj->id;
+           //store logs detail
+                $params=array();
+                
+                $params['adminuserid']  = \Auth::guard('admins')->id();
+                $params['actionid']     = $this->adminAction->ADD_BLOG_TAGES;
+                $params['actionvalue']  = $id;
+                $params['remark']       = "Add Blog Tags::".$id;
 
-            //store logs detail
-            $params=array();    
-                                    
-            $params['adminuserid']  = \Auth::guard('admins')->id();
-            $params['actionid']     = $this->adminAction->ADD_ADMIN_ACTION ;
-            $params['actionvalue']  = $id;
-            $params['remark']       = "Add Admin Action::".$id;
-                                    
-            $logs=\App\Models\AdminLog::writeadminlog($params);
+                $logs=\App\Models\AdminLog::writeadminlog($params);
 
             session()->flash('success_message', $msg);
         }
@@ -144,7 +143,7 @@ class AdminActionController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $idate(format)
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -156,23 +155,23 @@ class AdminActionController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Responseid
      */
-    public function edit($id)
-    {
-        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$EDIT_ADMIN_LOG_ACTIONS);
+    public function edit($id, Request $request)
+    {        
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$EDIT_BLOG_TAGES);
         
         if($checkrights) 
         {
             return $checkrights;
-        }
+        }       
         
         $formObj = $this->modelObj->find($id);
 
         if(!$formObj)
         {
             abort(404);
-        }  
+        }   
 
         $data = array();
         $data['formObj'] = $formObj;
@@ -182,7 +181,6 @@ class AdminActionController extends Controller
         $data['action_url'] = $this->moduleRouteText.".update";
         $data['action_params'] = $formObj->id;
         $data['method'] = "PUT";
-        $data["action_show_hidde"] = 1;   
 
         return view($this->moduleViewName.'.add', $data);
     }
@@ -195,23 +193,22 @@ class AdminActionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
-        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$EDIT_ADMIN_LOG_ACTIONS);
+    {        
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$EDIT_BLOG_TAGES);
         
         if($checkrights) 
         {
             return $checkrights;
-        }   
-
-        $model = $this->adminAction->find($id);
+        }       
+        
+        $model = $this->modelObj->find($id);
 
         $status = 1;
         $msg = $this->updateMsg;
         $data = array();        
         
         $validator = Validator::make($request->all(), [
-            'description' => 'required|min:2',                 
-            'id' => 'required|unique:admin_actions,id,'.$id,                 
+            'title' => 'required|min:2',
         ]);
         
         // check validations
@@ -237,27 +234,21 @@ class AdminActionController extends Controller
             $input = $request->all();
             $model->update($input);
 
-            $edit_id = $request->get("id");
-            if($edit_id)
-            {
-                $model->id = $request->get("id");
-                $model->save();    
-            }
-            
             //store logs detail
-            $params=array();    
-                                    
-            $params['adminuserid']  = \Auth::guard('admins')->id();
-            $params['actionid']     = $this->adminAction->EDIT_ADMIN_ACTION ;
-            $params['actionvalue']  = $id;
-            $params['remark']       = "Edit Admin Action::".$id;
-                                    
-            $logs=\App\Models\AdminLog::writeadminlog($params);
-            
+                $params=array();
+                
+                $params['adminuserid']  = \Auth::guard('admins')->id();
+                $params['actionid']     = $this->adminAction->EDIT_BLOG_TAGES;
+                $params['actionvalue']  = $id;
+                $params['remark']       = "Edit Blog Tags::".$id;
+
+                $logs=\App\Models\AdminLog::writeadminlog($params);
+
             session()->flash('success_message', $msg);
         }
         
         return ['status' => $status, 'msg' => $msg, 'data' => $data];        
+
     }
 
     /**
@@ -266,14 +257,16 @@ class AdminActionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id,Request $request)
+    public function destroy($id, Request $request)
     {
-        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$DELETE_ADMIN_LOG_ACTIONS);
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$DELETE_BLOG_TAGES);
         
         if($checkrights) 
         {
             return $checkrights;
         }
+        
+        
         $modelObj = $this->modelObj->find($id);
 
         if($modelObj) 
@@ -285,14 +278,14 @@ class AdminActionController extends Controller
                 session()->flash('success_message', $this->deleteMsg); 
 
                 //store logs detail
-                $params=array();    
-                                        
+                $params=array();
+                
                 $params['adminuserid']  = \Auth::guard('admins')->id();
-                $params['actionid']     = $this->adminAction->DELETE_ADMIN_ACTION;
+                $params['actionid']     = $this->adminAction->DELETE_BLOG_TAGES;
                 $params['actionvalue']  = $id;
-                $params['remark']       = "Delete Admin Action::".$id;
-                                        
-                $logs=\App\Models\AdminLog::writeadminlog($params); 
+                $params['remark']       = "Detete Blog Tags::".$id;
+
+                $logs=\App\Models\AdminLog::writeadminlog($params);;            
 
                 return redirect($backUrl);
             } 
@@ -307,41 +300,65 @@ class AdminActionController extends Controller
             session()->flash('error_message', "Record not exists");
             return redirect($this->list_url);
         }
-
     }
+
     public function data(Request $request)
-    {
-        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$LIST_ADMIN_LOG_ACTIONS);
+    {        
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$LIST_BLOG_TAGES);
         
         if($checkrights) 
         {
             return $checkrights;
-        }
-       
-        $model = AdminAction::query();
+        }         
+        $model = BlogTag::query();
 
         return Datatables::eloquent($model)
-               
-            ->addColumn('action', function(AdminAction $row) {
-                return view("admin.partials.action",
-                    [
-                        'currentRoute' => $this->moduleRouteText,
-                        'row' => $row,                                 
-                        'isEdit' => \App\Models\Admin::isAccess(\App\Models\Admin::$EDIT_ADMIN_LOG_ACTIONS),
-                        'isDelete' => \App\Models\Admin::isAccess(\App\Models\Admin::$DELETE_ADMIN_LOG_ACTIONS),
-                                                     
-                    ]
-                )->render();
-            })                
-            ->filter(function ($query) 
-            {
-                $search_text = request()->get("search_text");                                      
+                ->editColumn('status', 'admin.partials.status')
+                
+                ->editColumn('created_at', function($row){
+                
+                if(!empty($row->created_at))         
+                    return date("j M, Y",strtotime($row->created_at));
+                else
+                    return '-';    
+                })
 
-                if(!empty($search_text))
+               ->addColumn('action', function(BlogTag $row) {
+                    return view("admin.partials.action",
+                            [
+                                'currentRoute' => $this->moduleRouteText,
+                                'row' => $row,
+                                'isEdit' =>  \App\Models\Admin::isAccess(\App\Models\Admin::$EDIT_BLOG_TAGES),
+                                'isDelete' =>  \App\Models\Admin::isAccess(\App\Models\Admin::$DELETE_BLOG_TAGES),
+                            ]
+                            )->render();
+                })->rawColumns(['status','action'])                
+                ->filter(function ($query) 
                 {
-                    $query = $query->where('description', 'LIKE', '%'.$search_text.'%');
-                }
-            })
-            ->make(true);        
+                    $search_id = request()->get("search_id");                    
+                    $search_text = request()->get("search_text");                    
+                    $search_status = request()->get("search_status");  
+
+                    if(!empty($search_id))
+                    {
+                        $idArr = explode(',', $search_id);
+                        $idArr = array_filter($idArr);                
+                        if(count($idArr)>0)
+                        {
+                            $query = $query->whereIn("id",$idArr);
+                        } 
+                    }
+                    if(!empty($search_text))
+                    {
+                        $query = $query->where('title', 'LIKE', '%'.$search_text.'%');
+                    }               
+
+                    if($search_status == "1" || $search_status == "0")
+                    {
+                        $query = $query->where('status', $search_status);
+                    }                           
+
+                })
+                ->make(true);        
     }        
 }

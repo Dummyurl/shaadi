@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlertPortfoliosTable extends Migration
+class CreatePortfolioCategoriesTbl extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,10 @@ class AlertPortfoliosTable extends Migration
      */
     public function up()
     {
-        Schema::table('portfolios', function (Blueprint $table) {
-            $table->foreign('category_id')
-                  ->references('id')->on('portfolio_categories');
+        Schema::create('portfolio_categories', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('title');
+            $table->timestamps();
         });
     }
 
@@ -26,8 +27,6 @@ class AlertPortfoliosTable extends Migration
      */
     public function down()
     {
-        Schema::table('portfolios', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('portfolio_categories');
     }
 }

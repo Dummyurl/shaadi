@@ -15,22 +15,21 @@ class CreateUsersTable extends Migration {
 		Schema::create('users', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->string('name')->nullable();
-			$table->string('firstname');
-			$table->string('lastname');
-			$table->string('address')->nullable();
-			$table->string('city')->nullable();
-			$table->string('state')->nullable();
-			$table->string('country')->nullable();
-			$table->string('zipcode')->nullable();
-			$table->string('mobile')->nullable();
-			$table->timestamp('last_login_at')->default(DB::raw('CURRENT_TIMESTAMP'));
-			$table->string('status')->default('pending');
-			$table->string('email')->unique();
-			$table->string('password');
-			$table->string('remember_token', 100)->nullable();
-			$table->string('slug')->nullable();
-			$table->timestamps();
+            $table->integer('user_type_id')->unsigned()->nullable();
+            $table->string('name')->nullable()->nullable();
+            $table->string('firstname')->nullable();
+            $table->string('lastname')->nullable();
+            $table->string('address')->nullable();
+            $table->integer('phone')->nullable();
+            $table->string('email')->nullable();
+            $table->string('password')->nullable();
+            $table->integer('city_id')->unsigned()->nullable();
+            $table->integer('status')->nullable()->default(1);
+            $table->string('slug')->nullable();
+            $table->timestamp('last_login_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+			$table->string('remember_token')->nullable();
+            $table->timestamps();
+
 		});
 	}
 

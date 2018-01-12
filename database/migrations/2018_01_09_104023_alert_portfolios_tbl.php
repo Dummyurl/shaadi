@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlertUsersTable extends Migration
+class AlertPortfoliosTbl extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,12 @@ class AlertUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->integer('user_type_id')->unsigned()->nullable()->after('id');
+        Schema::table('portfolios', function (Blueprint $table) {
+            $table->foreign('category_id')->references('id')
+                    ->on('portfolio_categories')
+                    ->onUpdate('RESTRICT')
+                    ->onDelete('RESTRICT');
+       
         });
     }
 
@@ -25,7 +29,7 @@ class AlertUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('portfolios', function (Blueprint $table) {
             //
         });
     }

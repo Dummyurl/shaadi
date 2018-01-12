@@ -172,6 +172,10 @@ class PackageController extends Controller
         $status = 1;
         $msg = "Packag has been created successfully.";
         $data = array();
+
+        $packages_id = request()->get('packages_id');
+        $image = request()->file('image');
+        $title = request()->get('title');
         
         $validator = Validator::make($request->all(), [
             'packages_id'=>'required|numeric', 
@@ -194,33 +198,23 @@ class PackageController extends Controller
         }         
         else
         {
-            $packages_id = request()->get('packages_id');
-            $title = request()->get('title');
-            $image = request()->file('image');
-
             
-                $package = new \App\Models\Package;
-                $packages_id = $package->id;
-                if(!empty($image)){
-                
-                //$destinationPath = public_path().'/images/users/';  
-                $destinationPath = public_path().DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.'package'.DIRECTORY_SEPARATOR.$packages_id;
+            $destinationPath = public_path().DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.'package'.DIRECTORY_SEPARATOR.$packages_id;
 
-                   $image_name =$image->getClientOriginalName();              
-                   $extension =$image->getClientOriginalExtension();
-                   $image_name=md5($image_name);
-                   $profile_image= $image_name.'.'.$extension;
-                   $file =$image->move($destinationPath,$profile_image);
+            $image_name=$image->getClientOriginalName();
+            $extension =$image->getClientOriginalExtension();
+            $image_name=md5($image_name);
+            $profile_image= $image_name.'.'.$extension;
+            $file =$image->move($destinationPath,$profile_image);
 
-                $package->image = $profile_image;
-                } 
-                
-                $package->packages_id=$packages_id;
-                $package->image=$image_name;                                  
-                $package->title=$title;            
-                $package->save();
-                
-                $id = $package->id;
+            $image_record= new Package(); 
+                               
+            $image_record->packages_id=$packages_id;
+            $image_record->image=$profile_image;                                  
+            $image_record->title=$title;            
+            $image_record->save();
+
+            $id = $image_record->id;  
                 
                 //store logs detail
                 $params = array();
@@ -379,25 +373,35 @@ class PackageController extends Controller
             return $checkrights;
         }
 
-        $modelObj = $this->modelObj->find($id); 
-
+       $modelObj = $this->modelObj->find($id);
+       
         if($modelObj) 
         {
             try 
             {             
                 $backUrl = $request->server('HTTP_REFERER');
+                //$url = public_path().'/uploads/users/'.$id.'/'.$modelObj->image;
+                $url = public_path().'/themes/admin/assets/upload/package/'.$modelObj->image;
+                
+                if($url)
+                {
+                    if (is_file($url)) {
+                        unlink($url);
+                    }
+                }
+
                 $modelObj->delete();
                 session()->flash('success_message', $this->deleteMsg); 
 
                 //store logs detail
-                $params=array();
-                
-                $params['adminuserid']  = \Auth::guard('admins')->id();
-                $params['actionid']     = $this->adminAction->DELETE_PACKAGES;
-                $params['actionvalue']  = $id;
-                $params['remark']       = "Delete Package::".$id;
+                    $params=array();
+                    
+                    $params['adminuserid']  = \Auth::guard('admins')->id();
+                    $params['actionid']     = $this->adminAction->DELETE_PACKAGES;
+                    $params['actionvalue']  = $id;
+                    $params['remark']       = "Delete Package::".$id;
 
-                $logs=\App\Models\AdminLog::writeadminlog($params);    
+                    $logs=\App\Models\AdminLog::writeadminlog($params);    
 
                 return redirect($backUrl);
             } 

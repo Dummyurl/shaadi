@@ -150,7 +150,7 @@ class VendorsController extends Controller
             'state_id' => 'required|exists:'.TBL_STATE.',id',
             'country_id' => 'required|exists:'.TBL_COUNTRY.',id',
             'address' => 'required|min:2',
-            'mobile' => 'required|numeric',
+            'phone' => 'required|numeric',
             'status' => ['required', Rule::in([1,0])],
         ]);
         if ($validator->fails())         
@@ -175,7 +175,7 @@ class VendorsController extends Controller
             $password = $request->get('password');
             $city_id = $request->get('city_id');
             $address = $request->get('address');
-            $mobile = $request->get('mobile');
+            $phone = $request->get('phone');
             $status = $request->get('status');
 
             if(empty($name)){
@@ -192,7 +192,7 @@ class VendorsController extends Controller
                 $user_obj->password= $password;
                 $user_obj->city_id= $city_id;
                 $user_obj->address= $address;
-                $user_obj->mobile= $mobile;
+                $user_obj->phone= $phone;
                 $user_obj->status= $status;
                 $user_obj->save();
                 $user_id = $user_obj->id;
@@ -315,7 +315,7 @@ class VendorsController extends Controller
             'state_id' => 'required|exists:'.TBL_STATE.',id',
             'country_id' => 'required|exists:'.TBL_COUNTRY.',id',
             'address' => 'required|min:2',
-            'mobile' => 'required|numeric',
+            'phone' => 'required|numeric',
             'status' => ['required', Rule::in([1,0])],
         ]);
         
@@ -347,7 +347,7 @@ class VendorsController extends Controller
             $password = $request->get('password');
             $city_id = $request->get('city_id');
             $address = $request->get('address');
-            $mobile = $request->get('mobile');
+            $phone = $request->get('phone');
             $status = $request->get('status');
             
             if(empty($name)){
@@ -360,7 +360,7 @@ class VendorsController extends Controller
                 $user_obj->email= $email;
                 $user_obj->city_id= $city_id;
                 $user_obj->address= $address;
-                $user_obj->mobile= $mobile;
+                $user_obj->phone= $phone;
                 $user_obj->status= $status;
                 $user_obj->save();
 
@@ -450,7 +450,7 @@ class VendorsController extends Controller
                 ->join(TBL_VENDOR_CATEGORY,TBL_VENDOR_CATEGORY.".id","=",TBL_VENDOR.".vendor_category_id")
                 ->where(TBL_USERS.'.user_type_id','=',VENDOR);
 
-        return Datatables::eloquent($model)
+        return Datatables::eloquent($model)        
             
             ->editColumn('status', function ($row) {
                 if ($row->status == 1)

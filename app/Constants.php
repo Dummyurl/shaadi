@@ -15,12 +15,16 @@ define("TBL_STATE","states");
 define("TBL_CITY","cities");
 define("TBL_USER_TYPES","user_types");
 define("TBL_VENDOR_CATEGORY","vendor_categories");
+define("TBL_VENDOR","vendor_details");
 define("TBL_PORTFOLIOS","portfolios");
 define("TBL_PORTFOLIOS_CATEGORIES","portfolio_categories");
-define("TBL_EMAIL_SENT","email_sent_logs");
 define("TBL_PACKAGE_CATEGORIES","package_categories");
 define("TBL_PACKAGES","packages");
-define("TBL_VENDOR","vendor_details");
+define("TBL_BLOG_CATEGORY","blog_categories");
+define("TBL_BLOG_TAGES","blog_tags");
+define("TBL_BLOG_COMMENTS","blog_comments");
+define("TBL_BLOG_POST_TAGS","blog_post_tags");
+define("TBL_BLOG_POST","blog_posts");
 
 //User Constants
 define("VENDOR",1);

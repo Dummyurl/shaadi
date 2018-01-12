@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddForigenUsersTable extends Migration
+class AddForeignKeyToVendorDetailsTbl extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,15 @@ class AddForigenUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-             $table->foreign('user_type_id', 'user_type_fk_1')
+        Schema::table('vendor_details', function (Blueprint $table) {
+            $table->foreign('user_id')
                     ->references('id')
-                    ->on('user_types')
+                    ->on('users')
+                    ->onUpdate('RESTRICT')
+                    ->onDelete('RESTRICT');
+            $table->foreign('vendor_category_id')
+                    ->references('id')
+                    ->on('vendor_categories')
                     ->onUpdate('RESTRICT')
                     ->onDelete('RESTRICT');
         });
@@ -29,7 +34,7 @@ class AddForigenUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('vendor_details', function (Blueprint $table) {
             //
         });
     }

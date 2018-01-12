@@ -301,25 +301,37 @@ class PortfolioController extends Controller
             return $checkrights;
         }
         
-         $modelObj = $this->modelObj->find($id); 
+        $modelObj = $this->modelObj->find($id); 
+
+        //$id= $modelObj->id;
 
         if($modelObj) 
         {
             try 
             {             
                 $backUrl = $request->server('HTTP_REFERER');
+                //$url = public_path().'/uploads/users/'.$id.'/'.$modelObj->image;
+                $url = public_path().'/themes/admin/assets/upload/protfolio/'.$modelObj->image;
+                
+                if($url)
+                {
+                    if (is_file($url)) {
+                        unlink($url);
+                    }
+                }
+
                 $modelObj->delete();
                 session()->flash('success_message', $this->deleteMsg); 
 
                 //store logs detail
-                $params=array();
-                
-                $params['adminuserid']  = \Auth::guard('admins')->id();
-                $params['actionid']     = $this->adminAction->DELETE_PORTFOLIOS;
-                $params['actionvalue']  = $id;
-                $params['remark']       = "Delete Portfolio::".$id;
+                    $params=array();
+                    
+                    $params['adminuserid']  = \Auth::guard('admins')->id();
+                    $params['actionid']     = $this->adminAction->DELETE_PORTFOLIOS;
+                    $params['actionvalue']  = $id;
+                    $params['remark']       = "Delete Protfolio::".$id;
 
-                $logs=\App\Models\AdminLog::writeadminlog($params);     
+                    $logs=\App\Models\AdminLog::writeadminlog($params);    
 
                 return redirect($backUrl);
             } 

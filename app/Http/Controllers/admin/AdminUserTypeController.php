@@ -8,23 +8,23 @@ use App\Http\Requests;
 use Datatables;
 use Validator; 
 use App\Models\AdminAction;
-use App\Models\VendorCategory;
+use App\Models\AdminUserType;
 
-class VendorCategoriesController extends Controller
+
+class AdminUserTypeController extends Controller
 {
-
-     public function __construct() {
+    public function __construct() {
     
-        $this->moduleRouteText = "vendor-categories";
-        $this->moduleViewName = "admin.vendor_category";
+        $this->moduleRouteText = "admin-user-types";
+        $this->moduleViewName = "admin.admin_user_types";
         $this->list_url = route($this->moduleRouteText.".index");
 
-        $module = "Vendor Category";
+        $module = "Admin User Type";
         $this->module = $module;  
 
         $this->adminAction= new AdminAction; 
         
-        $this->modelObj = new VendorCategory();  
+        $this->modelObj = new AdminUserType();          
 
         $this->addMsg = $module . " has been added successfully!";
         $this->updateMsg = $module . " has been updated successfully!";
@@ -42,12 +42,18 @@ class VendorCategoriesController extends Controller
      */
     public function index()
     {
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$LIST_ADMIN_USER_TYPE);
+        
+        if($checkrights) 
+        {
+            return $checkrights;
+        }
+
         $data = array();        
-        $data['page_title'] = "Manage Vendor Categories";
+        $data['page_title'] = "Manage Admin User Types";
 
         $data['add_url'] = route($this->moduleRouteText.'.create');
-        $data['btnAdd'] = \App\Models\Admin::isAccess(\App\Models\Admin::$LIST_VENDOR_CATEGORY);  
-
+        $data['btnAdd'] = \App\Models\Admin::isAccess(\App\Models\Admin::$ADD_ADMIN_USER_TYPE);  
        return view($this->moduleViewName.".index", $data);
     }
 
@@ -56,9 +62,9 @@ class VendorCategoriesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-     public function create()
+    public function create()
     {
-        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$ADD_VENDOR_CATEGORY);
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$ADD_ADMIN_USER_TYPE);
         
         if($checkrights) 
         {
@@ -84,7 +90,7 @@ class VendorCategoriesController extends Controller
      */
     public function store(Request $request)
     {
-        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$ADD_VENDOR_CATEGORY);
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$ADD_ADMIN_USER_TYPE);
         
         if($checkrights) 
         {
@@ -96,8 +102,7 @@ class VendorCategoriesController extends Controller
         $data = array();
         
         $validator = Validator::make($request->all(), [
-            'title' => 'required|min:2|unique:'.TBL_VENDOR_CATEGORY.',title',  
-            
+            'title' => 'required|min:2|unique:'.TBL_ADMIN_USER_TYPE.',title',
         ]);
         if ($validator->fails())         
         {
@@ -121,9 +126,9 @@ class VendorCategoriesController extends Controller
             $params=array();    
                                     
             $params['adminuserid']  = \Auth::guard('admins')->id();
-            $params['actionid']     = $this->adminAction->ADD_VENDOR_CATEGORY;
+            $params['actionid']     = $this->adminAction->ADD_ADMIN_USER_TYPE;
             $params['actionvalue']  = $id;
-            $params['remark']       = "Add Vendor category::".$id;
+            $params['remark']       = "Add Admin User Type::".$id;
                                     
             $logs= \App\Models\AdminLog::writeadminlog($params);
             
@@ -152,7 +157,7 @@ class VendorCategoriesController extends Controller
      */
     public function edit($id, Request $request)
     {
-        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$EDIT_VENDOR_CATEGORY);
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$EDIT_ADMIN_USER_TYPE);
         
         if($checkrights) 
         {
@@ -170,13 +175,13 @@ class VendorCategoriesController extends Controller
         $data['formObj'] = $formObj;
         $data['page_title'] = "Edit ".$this->module;
         $data['buttonText'] = "Update";
-
         $data['action_url'] = $this->moduleRouteText.".update";
         $data['action_params'] = $formObj->id;
         $data['method'] = "PUT";     
 
         return view($this->moduleViewName.'.add', $data);
     }
+
     /**
      * Update the specified resource in storage.
      *
@@ -186,7 +191,7 @@ class VendorCategoriesController extends Controller
      */
     public function update(Request $request, $id)
     {
-       $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$EDIT_VENDOR_CATEGORY);
+       $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$EDIT_ADMIN_USER_TYPE);
         
         if($checkrights) 
         {
@@ -200,7 +205,7 @@ class VendorCategoriesController extends Controller
         $data = array();        
         
         $validator = Validator::make($request->all(), [            
-            'title' => 'required|min:2|unique:'.TBL_VENDOR_CATEGORY.',title,'.$id,                 
+            'title' => 'required|min:2|unique:'.TBL_ADMIN_USER_TYPE.',title,'.$id,                 
             
         ]);
         
@@ -231,16 +236,15 @@ class VendorCategoriesController extends Controller
                 $params=array();
                 
                 $params['adminuserid']  = \Auth::guard('admins')->id();
-                $params['actionid']     = $this->adminAction->EDIT_VENDOR_CATEGORY;
+                $params['actionid']     = $this->adminAction->EDIT_ADMIN_USER_TYPE;
                 $params['actionvalue']  = $id;
-                $params['remark']       = "Edit vendor category::".$id;
+                $params['remark']       = "Edit Admin User Type::".$id;
 
                 $logs=\App\Models\AdminLog::writeadminlog($params);         
         }
         
         return ['status' => $status,'msg' => $msg, 'data' => $data];               
     }
-
 
     /**
      * Remove the specified resource from storage.
@@ -250,7 +254,7 @@ class VendorCategoriesController extends Controller
      */
     public function destroy($id, Request $request)
     {
-        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$DELETE_VENDOR_CATEGORY);
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$DELETE_ADMIN_USER_TYPE);
         
         if($checkrights) 
         {
@@ -271,9 +275,9 @@ class VendorCategoriesController extends Controller
                     $params=array();
                     
                     $params['adminuserid']  = \Auth::guard('admins')->id();
-                    $params['actionid']     = $this->adminAction->DELETE_VENDOR_CATEGORY;
+                    $params['actionid']     = $this->adminAction->DELETE_ADMIN_USER_TYPE;
                     $params['actionvalue']  = $id;
-                    $params['remark']       = "Delete vendor category::".$id;
+                    $params['remark']       = "Delete Admin User Type::".$id;
 
                     $logs=\App\Models\AdminLog::writeadminlog($params);    
 
@@ -291,46 +295,38 @@ class VendorCategoriesController extends Controller
             return redirect($this->list_url);
         }
     }
-     public function data(Request $request)
+    public function data(Request $request)
     {
-        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$LIST_VENDOR_CATEGORY);
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$LIST_ADMIN_USER_TYPE);
         
         if($checkrights) 
         {
             return $checkrights;
         }
 
-        $model = VendorCategory::query();
+        $model = AdminUserType::query();
 
         return Datatables::eloquent($model)        
                
-            ->addColumn('action', function(VendorCategory $row) {
+            ->addColumn('action', function(AdminUserType $row) {
                 return view("admin.partials.action",
                     [
                         'currentRoute' => $this->moduleRouteText,
                         'row' => $row,                                 
-                        'isEdit' =>\App\Models\Admin::isAccess(\App\Models\Admin::$EDIT_VENDOR_CATEGORY),
-                        'isDelete' => \App\Models\Admin::isAccess(\App\Models\Admin::$DELETE_VENDOR_CATEGORY),                                                         
+                        'isEdit' =>\App\Models\Admin::isAccess(\App\Models\Admin::$EDIT_ADMIN_USER_TYPE),
+                        'isDelete' => \App\Models\Admin::isAccess(\App\Models\Admin::$DELETE_ADMIN_USER_TYPE),
                     ]
                 )->render();
-            })
-
-            ->editColumn('created_at', function($row){
-                
-                if(!empty($row->created_at))          
-                    return date("j M, Y h:i:s A",strtotime($row->created_at));
-                else
-                    return '-';    
-            })             
+            })           
             ->filter(function ($query) 
             {                                                    
-                $search_title = request()->get("search_title"); 
-                                      
+                $search_title = request()->get("search_title");      
+
                 if(!empty($search_title))
                 {
                     $query = $query->where("title", 'LIKE', '%'.$search_title.'%');
                 }  
             })
             ->make(true);        
-    } 
+    }
 }

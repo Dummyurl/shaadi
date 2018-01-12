@@ -19,9 +19,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    //protected $fillable = ['firstname','lastname','email','city_id','image','state','country','zipcode','mobile','password'];
-
-    protected $fillable = ['user_type_id','firstname','address','lastname','email','city_id','mobile','last_login_at','password','status','slug'];
+    protected $fillable = ['user_type_id','name','firstname','address','lastname','email','city_id','phone','last_login_at','password','status','slug'];
     
     /**
      * The attributes that should be hidden for arrays.
@@ -64,67 +62,5 @@ class User extends Authenticatable
         
         return $imageUrl;
     }
-    
-    public function getAdminList($params) 
-    {
-        $from_date = isset($params['search_start_date']) ? trim($params['search_start_date']) : '';
-        $to_date = isset($params['search_end_date']) ? trim($params['search_end_date']) : '';
         
-        $sortBy = isset($params['sort_by']) ? $params['sort_by'] : '';
-        $sortOrd = isset($params['sort_order']) ? $params['sort_order'] : 'DESC';
-        
-        $search_id = isset($params['search_id']) ? trim($params['search_id']) : '';
-        $search_firstname = isset($params['search_firstname']) ? trim($params['search_firstname']) : '';
-        $search_lastname = isset($params['search_lastname']) ? trim($params['search_lastname']) : '';
-        $search_email = isset($params['search_email']) ? trim($params['search_email']) : '';
-
-
-        $query = DB::table($this->table . ' AS u');
-
-        // filter query         
-        if(!empty($search_id))
-        {
-            $query->where('u.id', $search_id);
-        }
-        
-        if(!empty($search_firstname))
-        {
-            $query->where('u.firstname', 'LIKE', '%' . addslashes($search_firstname) . '%');
-        }                
-        
-        if(!empty($search_lastname))
-        {
-            $query->where('u.lastname', 'LIKE', '%' . addslashes($search_lastname) . '%');
-        }                
-        
-        if(!empty($search_email))
-        {
-            $query->where('u.email', 'LIKE', '%' . addslashes($search_email) . '%');
-        }                
-
-        if (!empty($from_date)) 
-        {
-            $query->whereRaw("DATE_FORMAT(u.created_at, '%Y-%m-%d') >= '".  addslashes($from_date)."'");
-        }
-        
-        if (!empty($to_date)) 
-        {
-            $query->whereRaw("DATE_FORMAT(u.created_at, '%Y-%m-%d') <= '".  addslashes($to_date)."'");
-        }
-
-        // sort query
-        if ($sortBy != "" && $sortOrd != "") 
-        {
-            $query->orderBy($sortBy, $sortOrd);
-        }
-        else 
-        {
-            $query->orderBy('u.id', 'DESC');
-        }
-
-        $record_per_page = (isset($params['record_per_page']) && $params['record_per_page'] != "" && $params['record_per_page'] > 0) ? $params['record_per_page'] : env('APP_RECORDS_PER_PAGE', 20);
-
-        return $query->paginate($record_per_page);
-    }
-    
 }

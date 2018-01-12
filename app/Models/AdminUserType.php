@@ -24,4 +24,5 @@ class AdminUserType extends Model
     {
         return $this->belongsToMany('App\Models\AdminGroupPage', 'admin_user_rights', 'user_type_id', 'page_id');
     }
+    public $timestamps = false;
 }

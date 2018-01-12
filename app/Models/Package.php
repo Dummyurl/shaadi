@@ -10,5 +10,5 @@ class Package extends Model
 
     protected $fillable = ['title','packages_id','image'];
 
- //   public $timestamps = true;
+   public $timestamps = true;
 }

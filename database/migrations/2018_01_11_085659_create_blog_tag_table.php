@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePortfolioCategoriesTable extends Migration
+class CreateBlogTagTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,14 @@ class CreatePortfolioCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('portfolio_categories', function (Blueprint $table) {
+        Schema::create('blog_tags', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title');
+            $table->string('slug', 255)->unique();
+            $table->string('title', 255);
+            $table->tinyInteger("status");            
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 
@@ -27,6 +31,6 @@ class CreatePortfolioCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('portfolio_categories');
+        Schema::dropIfExists('blog_tags');
     }
 }

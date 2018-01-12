@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 20, 2017 at 11:47 AM
--- Server version: 10.1.25-MariaDB
--- PHP Version: 7.0.21
+-- Generation Time: Jan 09, 2018 at 06:59 AM
+-- Server version: 10.1.22-MariaDB
+-- PHP Version: 7.1.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `new_project`
+-- Database: `shaadi`
 --
 
 -- --------------------------------------------------------
@@ -67,7 +67,16 @@ INSERT INTO `admin_actions` (`id`, `description`, `remark`) VALUES
 (26, 'Delete City', ''),
 (27, 'Add Admin Users', 'Add Admin Users'),
 (28, 'Edit Admin Users', 'Edit Admin Users'),
-(29, 'Delete Admin User', 'Delete Admin Users');
+(29, 'Delete Admin User', 'Delete Admin Users'),
+(30, 'Add Admin User Type', ''),
+(31, 'Edit Admin User Type', ''),
+(32, 'Delete Admin User Type', ''),
+(33, 'Add User Type', ''),
+(34, 'Edit User Type', ''),
+(35, 'Delete User Type', ''),
+(36, 'Add User', ''),
+(37, 'Edit User', ''),
+(38, 'Delete User', '');
 
 -- --------------------------------------------------------
 
@@ -91,7 +100,8 @@ INSERT INTO `admin_groups` (`id`, `parent_id`, `title`, `order_index`) VALUES
 (2, NULL, 'User Permissions', 10),
 (3, NULL, 'Frontend Users', 2),
 (4, NULL, 'Masters', 9),
-(5, NULL, 'Blog', 3);
+(5, NULL, 'Blog', 3),
+(6, NULL, 'vendors', 4);
 
 -- --------------------------------------------------------
 
@@ -128,7 +138,7 @@ INSERT INTO `admin_group_pages` (`id`, `admin_group_id`, `name`, `menu_title`, `
 (10, 2, 'Add Admin Modules Pages', 'Add Admin Modules Pages', 7, '', 'Y', '/admin/module-pages', 'N'),
 (11, 2, 'Edit Admin Modules Pages', 'Edit Admin Modules Pages', 8, '', 'Y', '/admin/module-pages', 'N'),
 (12, 2, 'Delete Admin Modules Pages', 'Delete Admin Modules Pages', 9, '', 'Y', '/admin/module-pages', 'N'),
-(13, 3, 'List Users', 'List Users', 1, '', 'Y', '/admin/users', 'Y'),
+(13, 3, 'List Users', 'List Users', 5, '', 'Y', '/admin/users', 'Y'),
 (14, 3, 'Add Users', 'Add Users', 2, 'Update Rights', 'Y', '/admin/users', 'N'),
 (15, 3, 'Edit Users', 'Edit Users', 3, '', 'Y', '/admin/users', 'N'),
 (16, 3, 'Delete Users', 'Delete Users', 4, '', 'Y', '/admin/users', 'N'),
@@ -136,7 +146,7 @@ INSERT INTO `admin_group_pages` (`id`, `admin_group_id`, `name`, `menu_title`, `
 (18, 4, 'Add Users Actions', 'Add Users Actions', 6, '', 'Y', '/admin/user-actions', 'N'),
 (19, 4, 'Edit Users Actions', 'Edit Users Actions', 7, '', 'Y', '/admin/user-actions', 'N'),
 (20, 4, 'Delete Users Actions', 'Delete Users Actions', 8, '', 'Y', '/admin/user-actions', 'N'),
-(21, 1, 'Admin User Logs', 'Admin User Logs', 1, '', 'Y', '/admin/admin-userlogs', 'Y'),
+(21, 1, 'Admin User Logs', 'Admin User Logs', 9, '', 'Y', '/admin/admin-userlogs', 'Y'),
 (22, 2, 'Assign Rights', 'Assign Rights', 2, '', 'Y', '/admin/user-type-rights', 'Y'),
 (23, 4, 'List Countries', 'List Countries', 9, '', 'Y', '/admin/countries', 'Y'),
 (24, 4, 'Add Countries', 'Add Countries', 12, '', 'Y', '/admin/countries', 'N'),
@@ -150,10 +160,26 @@ INSERT INTO `admin_group_pages` (`id`, `admin_group_id`, `name`, `menu_title`, `
 (32, 4, 'Add City', 'Add City', 18, '', 'Y', '', 'N'),
 (33, 4, 'Edit City', 'Edit City', 19, '', 'Y', '', 'N'),
 (34, 4, 'Delete City', 'Delete City', 20, '', 'Y', '', 'N'),
-(35, 1, 'List Admin Users', 'List Admin Users', 2, '', 'Y', '/admin/admin-users', 'Y'),
+(35, 1, 'List Admin Users', 'List Admin Users', 5, '', 'Y', '/admin/admin-users', 'Y'),
 (36, 1, 'Add Admin Users', 'Add Admin Users', 3, '', 'Y', '/admin/admin-users', 'N'),
 (37, 1, 'Edit Admin Users', 'Edit Admin Users', 4, '', 'Y', '', 'N'),
-(38, 1, 'Delete Admin Users', 'Delete Admin Users', 5, '', 'Y', '', 'N');
+(38, 1, 'Delete Admin Users', 'Delete Admin Users', 5, '', 'Y', '', 'N'),
+(39, 6, 'List Vendors', 'List Vendors', 5, '', 'Y', '/admin/vendors', 'Y'),
+(40, 1, 'List Admin User Types', 'List Admin User Types', 1, '', 'Y', '/admin/admin-user-types', 'Y'),
+(41, 1, 'Add Admin User Type', 'Add Admin User Type', 7, '', 'Y', '', 'N'),
+(42, 1, 'Edit Admin User Type', 'Edit Admin User Type', 8, '', 'Y', '', 'N'),
+(43, 1, 'Delete Admin User Type', 'Delete Admin User Type', 9, '', 'Y', '', 'N'),
+(44, 3, 'List User Types', 'List User Types', 1, '', 'Y', '/admin/user-types', 'Y'),
+(45, 3, 'Add User Type', 'Add User Type', 6, '', 'Y', '', 'N'),
+(46, 3, 'Edit User Type', 'Edit User Type', 7, '', 'Y', '', 'N'),
+(47, 3, 'Delete User Type', 'Delete User Type', 8, '', 'Y', '', 'N'),
+(48, 6, 'Add Vendor', 'Add Vendor', 2, '', 'Y', '', 'N'),
+(49, 6, 'Edit Vendor', 'Edit Vendor', 3, '', 'Y', '', 'N'),
+(50, 6, 'Delete Vendor', 'Delete Vendor', 4, '', 'Y', '', 'N'),
+(51, 6, 'List Vendor Categories', 'List Vendor Categories', 1, '', 'Y', '/admin/vendor-categories', 'Y'),
+(52, 6, 'Add Vendor Category', 'Add Vendor Category', 6, '', 'Y', '', 'N'),
+(53, 6, 'Edit Vendor Category', 'Edit Vendor Category', 7, '', 'Y', '', 'N'),
+(54, 6, 'Delete Vendor Category', 'Delete Vendor Category', 8, '', 'Y', '', 'N');
 
 -- --------------------------------------------------------
 
@@ -266,7 +292,88 @@ INSERT INTO `admin_logs` (`id`, `adminuserid`, `actionid`, `actionvalue`, `remar
 (545, 1, 1, '1', 'Login Admin User', '::1', '2017-09-20 05:02:42', '2017-09-20 05:02:42'),
 (546, 1, 1, '1', 'Login Admin User', '::1', '2017-09-20 05:33:22', '2017-09-20 05:33:22'),
 (547, 1, 1, '1', 'Login Admin User', '::1', '2017-09-20 09:44:58', '2017-09-20 09:44:58'),
-(548, 1, 27, '21', 'Add Admin User::21', '::1', '2017-09-20 09:45:39', '2017-09-20 09:45:39');
+(548, 1, 27, '21', 'Add Admin User::21', '::1', '2017-09-20 09:45:39', '2017-09-20 09:45:39'),
+(549, 1, 1, '1', 'Login Admin User', '::1', '2017-11-16 10:13:48', '2017-11-16 10:13:48'),
+(550, 1, 15, '6', 'Add Admin Module::6', '::1', '2017-11-16 10:23:59', '2017-11-16 10:23:59'),
+(551, 1, 11, '39', 'Add Admin Models Page ::39', '::1', '2017-11-16 10:24:58', '2017-11-16 10:24:58'),
+(552, 1, 12, '13', 'Edit Admin Module Page::13', '::1', '2017-11-16 10:57:07', '2017-11-16 10:57:07'),
+(553, 1, 2, '1', 'Logout Admin User', '::1', '2017-11-16 10:57:18', '2017-11-16 10:57:18'),
+(554, 1, 1, '1', 'Login Admin User', '::1', '2017-11-16 10:57:29', '2017-11-16 10:57:29'),
+(555, 1, 12, '13', 'Edit Admin Module Page::13', '::1', '2017-11-16 11:01:54', '2017-11-16 11:01:54'),
+(556, 1, 14, '1', 'Update Rights ::1', '::1', '2017-11-16 11:02:25', '2017-11-16 11:02:25'),
+(557, 1, 2, '1', 'Logout Admin User', '::1', '2017-11-16 11:02:29', '2017-11-16 11:02:29'),
+(558, 1, 1, '1', 'Login Admin User', '::1', '2017-11-16 11:02:41', '2017-11-16 11:02:41'),
+(559, 1, 11, '40', 'Add Admin Models Page ::40', '::1', '2017-11-16 11:15:51', '2017-11-16 11:15:51'),
+(560, 1, 11, '41', 'Add Admin Models Page ::41', '::1', '2017-11-16 11:16:54', '2017-11-16 11:16:54'),
+(561, 1, 11, '42', 'Add Admin Models Page ::42', '::1', '2017-11-16 11:17:35', '2017-11-16 11:17:35'),
+(562, 1, 11, '43', 'Add Admin Models Page ::43', '::1', '2017-11-16 11:18:14', '2017-11-16 11:18:14'),
+(563, 1, 14, '1', 'Update Rights ::1', '::1', '2017-11-16 11:52:31', '2017-11-16 11:52:31'),
+(564, 1, 14, '1', 'Update Rights ::1', '::1', '2017-11-16 11:52:54', '2017-11-16 11:52:54'),
+(565, 1, 2, '1', 'Logout Admin User', '::1', '2017-11-16 11:52:58', '2017-11-16 11:52:58'),
+(566, 1, 1, '1', 'Login Admin User', '::1', '2017-11-16 11:53:20', '2017-11-16 11:53:20'),
+(567, 1, 30, '3', 'Edit Admin User Type::3', '::1', '2017-11-16 11:54:33', '2017-11-16 11:54:33'),
+(568, 1, 5, '30', 'Add Admin Action::30', '::1', '2017-11-16 11:58:59', '2017-11-16 11:58:59'),
+(569, 1, 5, '31', 'Add Admin Action::31', '::1', '2017-11-16 11:59:32', '2017-11-16 11:59:32'),
+(570, 1, 5, '32', 'Add Admin Action::32', '::1', '2017-11-16 11:59:50', '2017-11-16 11:59:50'),
+(571, 1, 31, '3', 'Edit Admin User Type::3', '::1', '2017-11-16 12:00:39', '2017-11-16 12:00:39'),
+(572, 1, 11, '44', 'Add Admin Models Page ::44', '::1', '2017-11-16 12:06:44', '2017-11-16 12:06:44'),
+(573, 1, 11, '45', 'Add Admin Models Page ::45', '::1', '2017-11-16 12:07:18', '2017-11-16 12:07:18'),
+(574, 1, 11, '46', 'Add Admin Models Page ::46', '::1', '2017-11-16 12:07:51', '2017-11-16 12:07:51'),
+(575, 1, 11, '47', 'Add Admin Models Page ::47', '::1', '2017-11-16 12:08:29', '2017-11-16 12:08:29'),
+(576, 1, 14, '1', 'Update Rights ::1', '::1', '2017-11-16 12:09:12', '2017-11-16 12:09:12'),
+(577, 1, 2, '1', 'Logout Admin User', '::1', '2017-11-16 12:09:44', '2017-11-16 12:09:44'),
+(578, 1, 1, '1', 'Login Admin User', '::1', '2017-11-16 12:09:59', '2017-11-16 12:09:59'),
+(579, 1, 5, '33', 'Add Admin Action::33', '::1', '2017-11-16 12:12:55', '2017-11-16 12:12:55'),
+(580, 1, 5, '34', 'Add Admin Action::34', '::1', '2017-11-16 12:13:16', '2017-11-16 12:13:16'),
+(581, 1, 5, '35', 'Add Admin Action::35', '::1', '2017-11-16 12:13:39', '2017-11-16 12:13:39'),
+(582, 1, 5, '36', 'Add Admin Action::36', '::1', '2017-11-16 12:15:48', '2017-11-16 12:15:48'),
+(583, 1, 5, '37', 'Add Admin Action::37', '::1', '2017-11-16 12:16:06', '2017-11-16 12:16:06'),
+(584, 1, 5, '38', 'Add Admin Action::38', '::1', '2017-11-16 12:16:24', '2017-11-16 12:16:24'),
+(585, 1, 33, '1', 'Add User Type::1', '::1', '2017-11-16 12:17:35', '2017-11-16 12:17:35'),
+(586, 1, 11, '48', 'Add Admin Models Page ::48', '::1', '2017-11-16 12:54:10', '2017-11-16 12:54:10'),
+(587, 1, 11, '49', 'Add Admin Models Page ::49', '::1', '2017-11-16 12:55:02', '2017-11-16 12:55:02'),
+(588, 1, 12, '48', 'Edit Admin Module Page::48', '::1', '2017-11-16 12:55:23', '2017-11-16 12:55:23'),
+(589, 1, 11, '50', 'Add Admin Models Page ::50', '::1', '2017-11-16 12:55:57', '2017-11-16 12:55:57'),
+(590, 1, 1, '1', 'Login Admin User', '::1', '2017-11-17 04:14:05', '2017-11-17 04:14:05'),
+(591, 1, 14, '1', 'Update Rights ::1', '::1', '2017-11-17 04:15:59', '2017-11-17 04:15:59'),
+(592, 1, 2, '1', 'Logout Admin User', '::1', '2017-11-17 04:16:08', '2017-11-17 04:16:08'),
+(593, 1, 1, '1', 'Login Admin User', '::1', '2017-11-17 04:16:24', '2017-11-17 04:16:24'),
+(594, 1, 33, '1', 'Add Vendor category::1', '::1', '2017-11-17 04:48:30', '2017-11-17 04:48:30'),
+(595, 1, 33, '2', 'Add Vendor category::2', '::1', '2017-11-17 04:48:59', '2017-11-17 04:48:59'),
+(596, 1, 33, '3', 'Add Vendor category::3', '::1', '2017-11-17 04:49:16', '2017-11-17 04:49:16'),
+(597, 1, 33, '4', 'Add Vendor category::4', '::1', '2017-11-17 04:49:30', '2017-11-17 04:49:30'),
+(598, 1, 11, '51', 'Add Admin Models Page ::51', '::1', '2017-11-17 04:51:02', '2017-11-17 04:51:02'),
+(599, 1, 11, '52', 'Add Admin Models Page ::52', '::1', '2017-11-17 04:51:37', '2017-11-17 04:51:37'),
+(600, 1, 11, '53', 'Add Admin Models Page ::53', '::1', '2017-11-17 04:52:29', '2017-11-17 04:52:29'),
+(601, 1, 11, '54', 'Add Admin Models Page ::54', '::1', '2017-11-17 04:53:09', '2017-11-17 04:53:09'),
+(602, 1, 14, '1', 'Update Rights ::1', '::1', '2017-11-17 04:53:35', '2017-11-17 04:53:35'),
+(603, 1, 2, '1', 'Logout Admin User', '::1', '2017-11-17 04:53:39', '2017-11-17 04:53:39'),
+(604, 1, 1, '1', 'Login Admin User', '::1', '2017-11-17 04:53:53', '2017-11-17 04:53:53'),
+(605, 1, 36, '1', 'Add Vendor::1', '::1', '2017-11-17 05:00:50', '2017-11-17 05:00:50'),
+(606, 1, 36, '2', 'Add Vendor::2', '::1', '2017-11-17 05:27:45', '2017-11-17 05:27:45'),
+(607, 1, 37, '2', 'Edit vendor::2', '::1', '2017-11-17 06:00:04', '2017-11-17 06:00:04'),
+(608, 1, 37, '2', 'Edit vendor::2', '::1', '2017-11-17 06:00:45', '2017-11-17 06:00:45'),
+(609, 1, 37, '2', 'Edit vendor::2', '::1', '2017-11-17 06:01:17', '2017-11-17 06:01:17'),
+(610, 1, 37, '2', 'Edit vendor::2', '::1', '2017-11-17 06:01:59', '2017-11-17 06:01:59'),
+(611, 1, 39, '2', 'Changed Vendor Status Active to Inactive', '::1', '2017-11-17 06:08:54', '2017-11-17 06:08:54'),
+(612, 1, 1, '1', 'Login Admin User', '::1', '2017-11-17 12:45:52', '2017-11-17 12:45:52'),
+(613, 1, 1, '1', 'Login Admin User', '::1', '2017-11-22 10:38:22', '2017-11-22 10:38:22'),
+(614, 1, 1, '1', 'Login Admin User', '::1', '2017-11-22 11:17:22', '2017-11-22 11:17:22'),
+(615, 1, 1, '1', 'Login Admin User', '::1', '2017-12-04 10:09:40', '2017-12-04 10:09:40'),
+(616, 1, 39, '2', 'Changed Vendor Status Inactive to Active', '::1', '2017-12-04 10:10:07', '2017-12-04 10:10:07'),
+(617, 1, 1, '1', 'Login Admin User', '::1', '2018-01-08 09:11:05', '2018-01-08 09:11:05'),
+(618, 1, 1, '1', 'Login Admin User', '::1', '2018-01-08 10:12:23', '2018-01-08 10:12:23'),
+(619, 1, 1, '1', 'Login Admin User', '::1', '2018-01-08 10:31:22', '2018-01-08 10:31:22'),
+(620, 1, 28, '1', 'Edit Admin User::1', '::1', '2018-01-08 10:37:00', '2018-01-08 10:37:00'),
+(621, 1, 12, '51', 'Edit Admin Module Page::51', '::1', '2018-01-08 10:40:15', '2018-01-08 10:40:15'),
+(622, 1, 12, '39', 'Edit Admin Module Page::39', '::1', '2018-01-08 10:40:21', '2018-01-08 10:40:21'),
+(623, 1, 12, '40', 'Edit Admin Module Page::40', '::1', '2018-01-08 10:41:11', '2018-01-08 10:41:11'),
+(624, 1, 12, '35', 'Edit Admin Module Page::35', '::1', '2018-01-08 10:41:18', '2018-01-08 10:41:18'),
+(625, 1, 12, '21', 'Edit Admin Module Page::21', '::1', '2018-01-08 10:41:24', '2018-01-08 10:41:24'),
+(626, 1, 12, '44', 'Edit Admin Module Page::44', '::1', '2018-01-08 10:41:57', '2018-01-08 10:41:57'),
+(627, 1, 12, '13', 'Edit Admin Module Page::13', '::1', '2018-01-08 10:42:01', '2018-01-08 10:42:01'),
+(628, 1, 2, '1', 'Logout Admin User', '::1', '2018-01-08 10:42:27', '2018-01-08 10:42:27'),
+(629, 1, 1, '1', 'Login Admin User', '::1', '2018-01-08 10:42:39', '2018-01-08 10:42:39');
 
 -- --------------------------------------------------------
 
@@ -294,7 +401,7 @@ CREATE TABLE `admin_users` (
 --
 
 INSERT INTO `admin_users` (`id`, `user_type_id`, `name`, `email`, `password`, `status`, `last_login_at`, `remember_token`, `slug`, `created_at`, `updated_at`, `phone`) VALUES
-(1, 1, 'Admin', 'admin@gmail.com', '$2y$10$8HiNGIdnO18q7KVAsx6vCONxj4e9WCiNdGg0xwVIxZaQa3C9VbxfK', 1, '2017-09-20 04:14:58', 'H9sGYYMRwwmESK5qx0jNSzsUVTkkZpigIxAlNh3VhI9qmZZjvwG0Jz5XyrEe', NULL, '2016-12-11 10:31:25', '2017-09-20 04:14:58', '1234567890'),
+(1, 1, 'Admin User', 'admin@gmail.com', '$2y$10$8HiNGIdnO18q7KVAsx6vCONxj4e9WCiNdGg0xwVIxZaQa3C9VbxfK', 1, '2018-01-08 05:12:39', 'tnv0czEEnCp6PTrdYja1Z109bKhTyOJIwDojJ1vc3MCfLU0OenQQ2Q6321J7', NULL, '2016-12-11 10:31:25', '2018-01-08 05:12:39', '1234567890'),
 (21, 1, 'Test', 'test@gmail.com', '$2y$10$xxcoNZUD43/cpJ6XyRS8O.2jwPexfKHEUTdYqtdJwDZvursCBdWfW', 1, '2017-09-20 09:45:39', NULL, NULL, '2017-09-20 04:15:38', '2017-09-20 04:15:39', NULL);
 
 -- --------------------------------------------------------
@@ -318,6 +425,26 @@ INSERT INTO `admin_user_rights` (`user_type_id`, `page_id`) VALUES
 (1, 36),
 (1, 37),
 (1, 38),
+(1, 40),
+(1, 41),
+(1, 42),
+(1, 43),
+(1, 13),
+(1, 14),
+(1, 15),
+(1, 16),
+(1, 44),
+(1, 45),
+(1, 46),
+(1, 47),
+(1, 39),
+(1, 48),
+(1, 49),
+(1, 50),
+(1, 51),
+(1, 52),
+(1, 53),
+(1, 54),
 (1, 1),
 (1, 2),
 (1, 3),
@@ -437,7 +564,6 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (11, '2017_08_20_115043_create_admin_user_types_table', 1),
 (12, '2017_08_20_115043_create_admin_users_table', 1),
 (13, '2017_08_20_115043_create_password_resets_table', 1),
-(14, '2017_08_20_115043_create_users_table', 1),
 (15, '2017_08_20_115046_add_foreign_keys_to_admin_group_pages_table', 1),
 (16, '2017_08_20_115046_add_foreign_keys_to_admin_groups_table', 1),
 (17, '2017_08_20_115046_add_foreign_keys_to_admin_user_rights_table', 1),
@@ -446,7 +572,13 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (20, '2017_09_14_102358_Create_States_table', 3),
 (21, '2017_09_14_102513_Create_Cities_table', 3),
 (22, '2017_09_14_102916_add_foreign_key_to__Cities_table', 3),
-(23, '2017_09_14_102939_add_foreign_key_to__States_table', 3);
+(23, '2017_09_14_102939_add_foreign_key_to__States_table', 3),
+(24, '2017_09_28_061603_Create_user_types_table', 4),
+(28, '2017_08_20_115043_create_users_table', 5),
+(29, '2017_11_16_123925_Create_vendor_details_tbl', 5),
+(30, '2017_11_16_124446_Add_foreign_key_users_tbl', 6),
+(31, '2017_11_16_124709_Create_vendor_categories_tbl', 7),
+(32, '2017_11_16_124817_Add_foreign_key_to_vendor_details_tbl', 8);
 
 -- --------------------------------------------------------
 
@@ -491,21 +623,19 @@ INSERT INTO `states` (`id`, `country_id`, `title`, `created_at`, `updated_at`) V
 
 CREATE TABLE `users` (
   `id` int(10) UNSIGNED NOT NULL,
+  `user_type_id` int(10) UNSIGNED DEFAULT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `firstname` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `lastname` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `firstname` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `lastname` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `address` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `city` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `state` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `country` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `zipcode` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `mobile` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `last_login_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `status` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'pending',
-  `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `remember_token` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `phone` int(11) DEFAULT NULL,
+  `email` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `password` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `city_id` int(10) UNSIGNED DEFAULT NULL,
+  `status` int(11) DEFAULT '1',
   `slug` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `last_login_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `remember_token` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -514,8 +644,9 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `firstname`, `lastname`, `address`, `city`, `state`, `country`, `zipcode`, `mobile`, `last_login_at`, `status`, `email`, `password`, `remember_token`, `slug`, `created_at`, `updated_at`) VALUES
-(1, NULL, 'admin11', 'admin2', NULL, NULL, NULL, NULL, NULL, NULL, '2017-09-20 08:50:42', 'pending', 'admin@gmail.com', '$2y$10$gvyJDAfTZSIdLYDbfD0TPOnqnmC8RXRwx.I0Y2LwBlfZznz/xOr/y', NULL, 'admin-admin', '2017-09-20 00:51:50', '2017-09-20 03:20:42');
+INSERT INTO `users` (`id`, `user_type_id`, `name`, `firstname`, `lastname`, `address`, `phone`, `email`, `password`, `city_id`, `status`, `slug`, `last_login_at`, `remember_token`, `created_at`, `updated_at`) VALUES
+(1, 1, 'test photographer', 'test user', 'photographer', '3, street , abcd soci.', 1234567890, 'photographer@gmail.com', 'd41d8cd98f00b204e9800998ecf8427e', 1, 1, 'test-photographer', '2017-11-17 05:00:50', NULL, '2017-11-16 23:30:50', '2017-11-16 23:55:07'),
+(2, 1, 'decorator person', 'decorator', 'persons', 'memnagar', 1234567899, 'decorator@gmail.com', 'e10adc3949ba59abbe56e057f20f883e', 3, 1, 'decorator-person', '2017-11-17 05:27:45', NULL, '2017-11-16 23:57:45', '2017-12-04 04:40:06');
 
 -- --------------------------------------------------------
 
@@ -535,6 +666,71 @@ CREATE TABLE `user_actions` (
 
 INSERT INTO `user_actions` (`id`, `description`, `remark`) VALUES
 (1, 'Login', 'Frontend User Login');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_types`
+--
+
+CREATE TABLE `user_types` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `user_types`
+--
+
+INSERT INTO `user_types` (`id`, `title`, `created_at`, `updated_at`) VALUES
+(1, 'vendor', '2017-11-16 06:47:34', '2017-11-16 06:47:34');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `vendor_categories`
+--
+
+CREATE TABLE `vendor_categories` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `title` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `vendor_categories`
+--
+
+INSERT INTO `vendor_categories` (`id`, `title`, `created_at`, `updated_at`) VALUES
+(1, 'Wedding Photographer', '2017-11-16 23:18:30', '2017-11-16 23:18:30'),
+(2, 'Wedding Decorator', '2017-11-16 23:18:59', '2017-11-16 23:18:59'),
+(3, 'Choreographer', '2017-11-16 23:19:16', '2017-11-16 23:19:16'),
+(4, 'Bridal Designer', '2017-11-16 23:19:30', '2017-11-16 23:19:30');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `vendor_details`
+--
+
+CREATE TABLE `vendor_details` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED DEFAULT NULL,
+  `vendor_category_id` int(10) UNSIGNED DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `vendor_details`
+--
+
+INSERT INTO `vendor_details` (`id`, `user_id`, `vendor_category_id`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, '2017-11-16 23:30:50', '2017-11-16 23:30:50'),
+(2, 2, 2, '2017-11-16 23:57:45', '2017-11-16 23:57:45');
 
 --
 -- Indexes for dumped tables
@@ -625,13 +821,33 @@ ALTER TABLE `states`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `users_email_unique` (`email`);
+  ADD KEY `user_type_fk_1` (`user_type_id`);
 
 --
 -- Indexes for table `user_actions`
 --
 ALTER TABLE `user_actions`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `user_types`
+--
+ALTER TABLE `user_types`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `vendor_categories`
+--
+ALTER TABLE `vendor_categories`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `vendor_details`
+--
+ALTER TABLE `vendor_details`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `vendor_details_user_id_foreign` (`user_id`),
+  ADD KEY `vendor_details_vendor_category_id_foreign` (`vendor_category_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -641,22 +857,22 @@ ALTER TABLE `user_actions`
 -- AUTO_INCREMENT for table `admin_actions`
 --
 ALTER TABLE `admin_actions`
-  MODIFY `id` bigint(64) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` bigint(64) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 --
 -- AUTO_INCREMENT for table `admin_groups`
 --
 ALTER TABLE `admin_groups`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `admin_group_pages`
 --
 ALTER TABLE `admin_group_pages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 --
 -- AUTO_INCREMENT for table `admin_logs`
 --
 ALTER TABLE `admin_logs`
-  MODIFY `id` int(64) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=549;
+  MODIFY `id` int(64) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=630;
 --
 -- AUTO_INCREMENT for table `admin_users`
 --
@@ -681,7 +897,7 @@ ALTER TABLE `countries`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 --
 -- AUTO_INCREMENT for table `states`
 --
@@ -697,6 +913,21 @@ ALTER TABLE `users`
 --
 ALTER TABLE `user_actions`
   MODIFY `id` bigint(64) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `user_types`
+--
+ALTER TABLE `user_types`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `vendor_categories`
+--
+ALTER TABLE `vendor_categories`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+--
+-- AUTO_INCREMENT for table `vendor_details`
+--
+ALTER TABLE `vendor_details`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- Constraints for dumped tables
 --
@@ -737,6 +968,19 @@ ALTER TABLE `cities`
 --
 ALTER TABLE `states`
   ADD CONSTRAINT `states_country_id_foreign` FOREIGN KEY (`country_id`) REFERENCES `countries` (`id`);
+
+--
+-- Constraints for table `users`
+--
+ALTER TABLE `users`
+  ADD CONSTRAINT `user_type_fk_1` FOREIGN KEY (`user_type_id`) REFERENCES `user_types` (`id`);
+
+--
+-- Constraints for table `vendor_details`
+--
+ALTER TABLE `vendor_details`
+  ADD CONSTRAINT `vendor_details_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `vendor_details_vendor_category_id_foreign` FOREIGN KEY (`vendor_category_id`) REFERENCES `vendor_categories` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -45,7 +45,7 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$LIST_USERS);
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$LIST_USER);
         
         if($checkrights) 
         {
@@ -53,7 +53,7 @@ class UsersController extends Controller
         }
         $data = array();        
         $data['page_title'] = "Manage Users"; 
-        $data['btnAdd'] = \App\Models\Admin::isAccess(\App\Models\Admin::$ADD_USERS);
+        $data['btnAdd'] = \App\Models\Admin::isAccess(\App\Models\Admin::$ADD_USER);
         $data['add_url'] = route($this->moduleRouteText.'.create');
         
         return view($this->moduleViewName.".index", $data); 
@@ -66,7 +66,7 @@ class UsersController extends Controller
      */
     public function create()
     {
-        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$ADD_USERS);
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$ADD_USER);
         
         if($checkrights) 
         {
@@ -96,7 +96,7 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$ADD_USERS);
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$ADD_USER);
         
         if($checkrights) 
         {
@@ -111,7 +111,10 @@ class UsersController extends Controller
             'lastname' => 'required|min:2',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8|same:password',            
-            'password_confirmation' => 'required|min:8|same:password',            
+            'confirm_password' => 'required|min:8|same:password',
+            'city_id' => 'required',
+            'address' => 'required|min:2',
+            'phone' => 'required|max:15',           
         ]);
         
         // check validations
@@ -130,19 +133,32 @@ class UsersController extends Controller
         else
         {
             $password = $request->get("password");
-            $password_confirmation = $request->get("password_confirmation");
+            $confirm_password = $request->get("confirm_password");
             $email = $request->get("email");
             
-            if($password_confirmation == $password)
+            if($confirm_password == $password)
             {
                 $user = new \App\Models\User;
                 $user->firstname = $request->get("firstname");
                 $user->lastname = $request->get("lastname");
-                $user->mobile = $request->get("mobile");
+                $user->phone = $request->get("phone");
                 $user->email = $email;
+                $user->address = $request->get("address");
+                $user->city_id = $request->get("city_id");
                 $user->password = bcrypt($password);
 
-                $user->save();   
+                $user->save();
+                $id = $user->id;
+
+                 //store logs detail
+                $params = array();
+
+                $params['adminuserid']  = \Auth::guard('admins')->id();
+                $params['actionid']     = $this->adminAction->ADD_USER;
+                $params['actionvalue']  = $id;
+                $params['remark']       = "Add User::".$id;
+
+                $logs = \App\Models\AdminLog::writeadminlog($params); 
                 
                 session()->flash('success_message', $this->addMsg);
             }
@@ -175,7 +191,7 @@ class UsersController extends Controller
      */
     public function edit($user)
     {
-        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$EDIT_USERS);
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$EDIT_USER);
         
         if($checkrights) 
         {
@@ -215,7 +231,7 @@ class UsersController extends Controller
      */
     public function update(Request $request, $user)
     {
-        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$EDIT_USERS);
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$EDIT_USER);
         
         if($checkrights) 
         {
@@ -232,6 +248,7 @@ class UsersController extends Controller
             'firstname' => 'required|min:2',
             'lastname' => 'required|min:2',
             'email' => 'required|email|unique:users,email,' .$id,
+            'phone' => 'required|max:15',
         ]);
         
         // check validations
@@ -251,10 +268,21 @@ class UsersController extends Controller
         {            
             $user->firstname = $request->get("firstname");
             $user->lastname = $request->get("lastname");
-            $user->mobile = $request->get("mobile");
+            $user->phone = $request->get("phone");
             $user->email = $request->get("email");            
 
-            $user->save();       
+            $user->save(); 
+            $id = $user->id;
+
+            //store logs detail
+                $params=array();
+                
+                $params['adminuserid']  = \Auth::guard('admins')->id();
+                $params['actionid']     = $this->adminAction->EDIT_USER;
+                $params['actionvalue']  = $id;
+                $params['remark']       = "Edit User::".$id;
+
+                $logs=\App\Models\AdminLog::writeadminlog($params);      
             
             session()->flash('success_message', $this->updateMsg);
                                        
@@ -275,7 +303,7 @@ class UsersController extends Controller
      */
     public function destroy($user,Request $request)
     {
-        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$DELETE_USERS);
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$DELETE_USER);
         
         if($checkrights) 
         {
@@ -291,6 +319,16 @@ class UsersController extends Controller
                 $backUrl = $request->server('HTTP_REFERER');
                 $modelObj->delete();
                 session()->flash('success_message', $this->deleteMsg); 
+
+                //store logs detail
+                    $params=array();
+                    
+                    $params['adminuserid']  = \Auth::guard('admins')->id();
+                    $params['actionid']     = $this->adminAction->DELETE_USER;
+                    $params['actionvalue']  = $id;
+                    $params['remark']       = "Delete User::".$id;
+
+                    $logs=\App\Models\AdminLog::writeadminlog($params);    
 
                 return redirect($backUrl);
             } 
@@ -308,7 +346,7 @@ class UsersController extends Controller
     }
     public function data(Request $request)
     {
-        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$LIST_USERS);
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$LIST_USER);
         
         if($checkrights) 
         {
@@ -323,8 +361,8 @@ class UsersController extends Controller
                     [
                         'currentRoute' => $this->moduleRouteText,
                         'row' => $row,                                 
-                        'isEdit' => \App\Models\Admin::isAccess(\App\Models\Admin::$EDIT_USERS),
-                        'isDelete' => \App\Models\Admin::isAccess(\App\Models\Admin::$DELETE_USERS),
+                        'isEdit' => \App\Models\Admin::isAccess(\App\Models\Admin::$EDIT_USER),
+                        'isDelete' => \App\Models\Admin::isAccess(\App\Models\Admin::$DELETE_USER),
                                                      
                     ]
                 )->render();
