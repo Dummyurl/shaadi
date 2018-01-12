@@ -15,7 +15,8 @@ use App\Models\AdminAction;
 
 class BlogPostsController extends Controller
 {
-    public function __construct() {
+    public function __construct() 
+    {
 
         $this->moduleRouteText = "blog.posts";
         $this->moduleViewName = "admin.BlogPost";
@@ -36,6 +37,8 @@ class BlogPostsController extends Controller
         view()->share("list_url", $this->list_url);
         view()->share("moduleRouteText", $this->moduleRouteText);
         view()->share("moduleViewName", $this->moduleViewName);
+
+        
     }    
     
     /**

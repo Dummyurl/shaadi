@@ -62,4 +62,5 @@ class BlogCategory extends Model
     {
         return $this->hasMany(\App\BlogPost::class);
     }
+    
 }
