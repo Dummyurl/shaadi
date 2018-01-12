@@ -41,13 +41,15 @@ Route::group(['prefix' => $ADMIN_PREFIX], function(){
     Route::get('profile', 'admin\AdminController@editProfile')->name("admin_edit_profile");
     Route::post('profile', 'admin\AdminController@updateProfile')->name("admin_update_profile");
         
-//Admin Users
+//Admin Users Log
     Route::any('admin-userlogs/data', 'admin\AdminUserLogsController@data')->name('admin-userlogs.data');
 	Route::resource('admin-userlogs', 'admin\AdminUserLogsController');
 
+//Admin Users
 	Route::any('admin-users/data', 'admin\AdminUserController@data')->name('admin-users.data');
 	Route::resource('admin-users', 'admin\AdminUserController'); 
 
+//Admin User TYpe
 	Route::any('admin-user-types/data', 'admin\AdminUserTypeController@data')->name('admin-user-types.data');
  	Route::resource('admin-user-types', 'admin\AdminUserTypeController');
 
@@ -55,19 +57,21 @@ Route::group(['prefix' => $ADMIN_PREFIX], function(){
 	Route::any('users/data', 'admin\UsersController@data')->name('users.data');
  	Route::resource('users', 'admin\UsersController');
 
+//User Type
  	Route::any('user-types/data', 'admin\UserTypesController@data')->name('user-types.data');
  	Route::resource('user-types', 'admin\UserTypesController');
 
-//vendors
+//vendors Category
  	Route::any('vendor-categories/data', 'admin\VendorCategoriesController@data')->name('vendor-categories.data');
  	Route::resource('vendor-categories', 'admin\VendorCategoriesController');
 
+//Vendors
 	Route::any('vendors/change-status/{id}/{status}', 'admin\VendorsController@changeStatus');
 	Route::any('vendors/view', 'admin\VendorsController@viewData');
 	Route::any('vendors/data', 'admin\VendorsController@data')->name('vendors.data');
  	Route::resource('vendors', 'admin\VendorsController');  	
 
-//Masters	
+//Admin Action
 	Route::any('admin-actions/data', 'admin\AdminActionController@data')->name('admin-actions.data');
 	Route::resource('admin-actions', 'admin\AdminActionController'); 
 
@@ -121,11 +125,11 @@ Route::group(['prefix' => $ADMIN_PREFIX], function(){
 	Route::any('blog/categories/data', 'admin\BlogCategoryController@data')->name("blog.categories.data");
 	Route::resource('blog/categories', 'admin\BlogCategoryController', ['as' => 'blog']);
 
-//Blog Tage
+//Blog Tages
     Route::any('blog/tags/data', 'admin\BlogTagsController@data')->name("blog.tags.data");
 	Route::resource('blog/tags', 'admin\BlogTagsController', ['as' => 'blog']);
 
-//Blog Post	
+//Blog Posts
 	Route::any('blog/posts/data', 'admin\BlogPostsController@data')->name("blog.posts.data");
 	Route::resource('blog/posts', 'admin\BlogPostsController', ['as' => 'blog']);
  	
