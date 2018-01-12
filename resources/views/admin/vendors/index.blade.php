@@ -6,7 +6,7 @@
 <div class="page-content">
     <div class="container">
 
-        <div class=" ">
+        <div class="">
             
             @include($moduleViewName.".search")           
 
@@ -138,12 +138,12 @@
             },            
             "order": [[ 0, "desc" ]],    
             columns: [
-                { data: 'id', name: 'id' },                                             
+                { data: 'id', name: 'id' },
                 { data: 'category_name', name: '{{ TBL_VENDOR_CATEGORY }}.title' },           
-                { data: 'name', name: 'name' },                                           
+                { data: 'name', name: 'name' },
                 { data: 'email', name: 'email' },                          
                 { data: 'city_name', name: '{{ TBL_CITY }}.title' },                  
-                { data: 'status', name: 'status' },                                   
+                { data: 'status', name: 'status' },
                 { data: 'created_at', name: 'created_at' },                      
                 { data: 'action', orderable: false, searchable: false},            
             ]

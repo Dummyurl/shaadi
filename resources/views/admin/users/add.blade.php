@@ -65,7 +65,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <label class="control-label">re-type Password: <span class="required">*</span></label>
-                                        {!! Form::password('password_confirmation',['class' => 'form-control', 'data-required' => true,'placeholder' => 'Enter re-type Password']) !!}
+                                        {!! Form::password('confirm_password',['class' => 'form-control', 'data-required' => true,'placeholder' => 'Enter re-type Password']) !!}
                                     </div>
                                     @endif
                                 </div>

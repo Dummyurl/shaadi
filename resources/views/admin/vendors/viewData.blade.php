@@ -23,12 +23,15 @@
 		</div>
 		<div class="row static-info">
 			<div class="col-md-5 name"> Phone Number: </div>
-			<div class="col-md-7 value"> {{$views->mobile}}</div>
+			<div class="col-md-7 value"> {{$views->phone}}</div>
 		</div>
 		<div class="row static-info">
 			<div class="col-md-5 name"> Address: </div>
 			<div class="col-md-7 value"> {{$views->address}}</div>
 		</div>
-
+		<div class="row static-info">
+			<div class="col-md-5 name"> Vendor Category: </div>
+			<div class="col-md-7 value"> {{$views->title}}</div>
+		</div>
 	</div>
 </div>

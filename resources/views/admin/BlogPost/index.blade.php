@@ -1,6 +1,5 @@
 @extends('admin.layouts.app')
 
-
 @section('content')
 
 <!-- BEGIN PAGE CONTENT BODY -->
@@ -9,35 +8,39 @@
 
         <div class="col-md-12">
             
-            @include($moduleViewName.".search")           
+            @include($moduleViewName.".search")
 
             <div class="clearfix"></div>    
             <div class="portlet box green">
                 <div class="portlet-title">
                     <div class="caption">
-                        <i class="fa fa-list"></i>{{ $page_title }}    
+                        <i class="fa fa-list"></i>{{ $page_title }} 
                     </div>
-                  
+                    
                     @if($btnAdd)
                         <a class="btn btn-default pull-right btn-sm mTop5" href="{{ $add_url }}">Add New</a>
-                    @endif 
-
+                    @endif
+                    
                 </div>
                 <div class="portlet-body">                    
-                    <table class="table table-bordered table-striped table-condensed flip-content" id="server-side-datatables">
-                        <thead>
-                            <tr>
-                               <th width="15%">ID</th>                                   
-                               <th width="85%">Description</th>                           
-                               <th width="10%" data-orderable="false">Action</th>
-                            </tr>
-                        </thead>                                         
-                        <tbody>
-                        </tbody>
-                    </table>                                              
+                        <table class="table table-bordered table-striped table-condensed flip-content" id="server-side-datatables">
+                            <thead>
+                                <tr>
+                                   <th width="15%">ID</th>
+                                   <th width="20%">Category</th>                                   
+                                   <th width="30%">Title</th>                                   
+                                   <th width="15%">Created AT</th>
+                                   <th width="10%" data-orderable="false">Action</th>
+                                </tr>
+                            </thead>                                         
+                            <tbody>
+                            </tbody>
+                        </table>                                              
                 </div>
             </div>              
         </div>
+
+
     </div>
 </div>
 </div>            
@@ -66,27 +69,28 @@
             processing: true,
             serverSide: true,
             searching: false,
-            lengthMenu: [
-                [100, 200, 300, 400, 500],
-                [100, 200, 300, 400, 500]  
-            ],
-            pageLength: 100,
             ajax: {
                 "url": "{!! route($moduleRouteText.'.data') !!}",
                 "data": function ( data ) 
-                {
+                 {
+                    data.search_category = $("#search-frm select[name='search_category']").val();
                     data.search_text = $("#search-frm input[name='search_text']").val();
-                }
+                    data.search_status = $("#search-frm select[name='search_status']").val();
+                 }
             },            
             "order": [[ 0, "desc" ]],    
             columns: [
                 { data: 'id', name: 'id' },
-                { data: 'description', name: 'description' },                                              
+                { data: 'category_title', name: '{{ TBL_BLOG_CATEGORY }}.title' },                
+                { data: 'title', name: 'title' },                
+                { data: 'created_at', name: 'created_at', searchable: false},
                 { data: 'action', orderable: false, searchable: false}             
             ]
-        });        
-    });
-    </script>
-@endsection
+        });  
 
+    });
+
+    </script>
+
+@endsection
 

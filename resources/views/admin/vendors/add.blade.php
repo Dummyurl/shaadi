@@ -95,8 +95,8 @@
                                         {!! Form::textarea('address',null,['class' => 'form-control', 'data-required' => true,'placeholder' => 'Enter Address','rows'=>'4']) !!}
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="control-label">Mobile No: <span class="required">*</span></label>                             
-                                        {!! Form::text('mobile',null,['class' => 'form-control', 'data-required' => true,'placeholder' => 'Enter Contact Number']) !!}
+                                        <label class="control-label">Contact No: <span class="required">*</span></label>                             
+                                        {!! Form::text('phone',null,['class' => 'form-control', 'data-required' => true,'placeholder' => 'Enter Contact Number']) !!}
                                     </div>
                                 </div>
                                 </fieldset>
