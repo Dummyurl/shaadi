@@ -6,8 +6,12 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Validator;
 use Datatables;
-
 use App\Models\User;
+use App\Models\UserType;
+use App\Models\AdminAction;
+use App\Models\City;
+use App\Models\Country;
+use App\Models\State;
 class UsersController extends Controller
 {
     public function __construct() {
@@ -19,7 +23,7 @@ class UsersController extends Controller
         $module = "List Users";
         $this->module = $module;  
 
-        //$this->adminAction= new AdminAction; 
+        $this->adminAction= new AdminAction; 
         
         $this->modelObj = new User();  
 
@@ -40,10 +44,16 @@ class UsersController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {        
+    {
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$LIST_USERS);
+        
+        if($checkrights) 
+        {
+            return $checkrights;
+        }
         $data = array();        
         $data['page_title'] = "Manage Users"; 
-
+        $data['btnAdd'] = \App\Models\Admin::isAccess(\App\Models\Admin::$ADD_USERS);
         $data['add_url'] = route($this->moduleRouteText.'.create');
         
         return view($this->moduleViewName.".index", $data); 
@@ -56,6 +66,12 @@ class UsersController extends Controller
      */
     public function create()
     {
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$ADD_USERS);
+        
+        if($checkrights) 
+        {
+            return $checkrights;
+        }
         $data = array();
         $data['formObj'] = $this->modelObj;
         $data['page_title'] = "Add ".$this->module;
@@ -63,7 +79,11 @@ class UsersController extends Controller
         $data['action_params'] = 0;
         $data['buttonText'] = "Save";
         $data["method"] = "POST"; 
-        $data['show_password'] = 1; 
+        $data['cityList'] = City::pluck("title","id")->all(); 
+        $data['stateList'] = State::pluck("title","id")->all(); 
+        $data['countryList'] = Country::pluck("title","id")->all(); 
+        $data['userTypeList'] = UserType::pluck("title","id")->all(); 
+        $data['pass_view'] = 1; 
 
         return view($this->moduleViewName.'.add', $data);
     }
@@ -76,6 +96,12 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$ADD_USERS);
+        
+        if($checkrights) 
+        {
+            return $checkrights;
+        }
         $status = 1;
         $msg = "User has been created successfully.";
         $data = array();
@@ -85,7 +111,7 @@ class UsersController extends Controller
             'lastname' => 'required|min:2',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8|same:password',            
-            'confirm_password' => 'required|min:8|same:password',            
+            'password_confirmation' => 'required|min:8|same:password',            
         ]);
         
         // check validations
@@ -104,10 +130,10 @@ class UsersController extends Controller
         else
         {
             $password = $request->get("password");
-            $confirm_password = $request->get("confirm_password");
+            $password_confirmation = $request->get("password_confirmation");
             $email = $request->get("email");
             
-            if($confirm_password == $password)
+            if($password_confirmation == $password)
             {
                 $user = new \App\Models\User;
                 $user->firstname = $request->get("firstname");
@@ -149,6 +175,12 @@ class UsersController extends Controller
      */
     public function edit($user)
     {
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$EDIT_USERS);
+        
+        if($checkrights) 
+        {
+            return $checkrights;
+        }
         $formObj = $user;
 
         if(!$formObj)
@@ -163,7 +195,12 @@ class UsersController extends Controller
         $data['buttonText'] = "Update";
         $data['action_url'] = $this->moduleRouteText.".update";
         $data['action_params'] = $formObj->id;        
-        $data['method'] = "PUT";           
+        $data['method'] = "PUT";
+        $data['cityList'] = City::pluck("title","id")->all(); 
+        $data['stateList'] = State::pluck("title","id")->all(); 
+        $data['countryList'] = Country::pluck("title","id")->all(); 
+        $data['userTypeList'] = UserType::pluck("title","id")->all(); 
+        $data['pass_view'] = 0; 
 
         return view($this->moduleViewName.'.add', $data);   
     }
@@ -178,6 +215,12 @@ class UsersController extends Controller
      */
     public function update(Request $request, $user)
     {
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$EDIT_USERS);
+        
+        if($checkrights) 
+        {
+            return $checkrights;
+        }
         $id = $user->id;
         $status = 1;
         $msg = "User has been updated successfully.";
@@ -232,6 +275,12 @@ class UsersController extends Controller
      */
     public function destroy($user,Request $request)
     {
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$DELETE_USERS);
+        
+        if($checkrights) 
+        {
+            return $checkrights;
+        }
         $id = $user->id;
         $modelObj = $this->modelObj->find($id);
 
@@ -259,7 +308,12 @@ class UsersController extends Controller
     }
     public function data(Request $request)
     {
-               
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$LIST_USERS);
+        
+        if($checkrights) 
+        {
+            return $checkrights;
+        }
         $model = User::query();
 
         return Datatables::eloquent($model)
@@ -269,8 +323,8 @@ class UsersController extends Controller
                     [
                         'currentRoute' => $this->moduleRouteText,
                         'row' => $row,                                 
-                        'isEdit' => 1,
-                        'isDelete' => 1,
+                        'isEdit' => \App\Models\Admin::isAccess(\App\Models\Admin::$EDIT_USERS),
+                        'isDelete' => \App\Models\Admin::isAccess(\App\Models\Admin::$DELETE_USERS),
                                                      
                     ]
                 )->render();

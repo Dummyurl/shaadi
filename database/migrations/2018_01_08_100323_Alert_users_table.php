@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlertVendorsTable extends Migration
+class AlertUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class AlertVendorsTable extends Migration
      */
     public function up()
     {
-        Schema::table('vendors', function (Blueprint $table) {
-            $table->foreign('user_type_id')->references('id')->on('user_types');
-            $table->foreign('vendor_category_id')->references('id')->on('vendor_categories');
+        Schema::table('users', function (Blueprint $table) {
+            $table->integer('user_type_id')->unsigned()->nullable()->after('id');
         });
     }
 
@@ -26,7 +25,7 @@ class AlertVendorsTable extends Migration
      */
     public function down()
     {
-        Schema::table('vendors', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             //
         });
     }

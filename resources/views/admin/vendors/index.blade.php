@@ -6,7 +6,7 @@
 <div class="page-content">
     <div class="container">
 
-        <div class="col-md-12">
+        <div class=" ">
             
             @include($moduleViewName.".search")           
 

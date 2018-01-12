@@ -53,6 +53,18 @@ class AdminUserController extends Controller
 
        return view($this->moduleViewName.".index", $data);  
     }
+    /*public function index(Request $request)
+    {
+        $data = array();        
+        $data['page_title'] = "Manage Admin Users";
+
+        $data['add_url'] = route($this->moduleRouteText.'.create');
+        $data['btnAdd'] = \App\Models\Admin::isAccess(\App\Models\Admin::$LIST_ADMIN_USERS);
+        $data['userTypeList'] = \App\Models\AdminUserType::pluck("title","id")->all(); 
+
+       return view($this->moduleViewName.".edit", $data);  
+    }*/
+
 
     /**
      * Show the form for creating a new resource.

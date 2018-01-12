@@ -20,3 +20,7 @@ define("TBL_PORTFOLIOS_CATEGORIES","portfolio_categories");
 define("TBL_EMAIL_SENT","email_sent_logs");
 define("TBL_PACKAGE_CATEGORIES","package_categories");
 define("TBL_PACKAGES","packages");
+define("TBL_VENDOR","vendor_details");
+
+//User Constants
+define("VENDOR",1);

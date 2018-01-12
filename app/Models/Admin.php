@@ -76,22 +76,19 @@ class Admin extends Authenticatable
     public static $EDIT_ADMIN_USERS = 37;
     public static $DELETE_ADMIN_USERS = 38;
 
-    public static $LIST_USER_TYPE = 39;
-    public static $ADD_USER_TYPE = 40;
-    public static $EDIT_USER_TYPE = 41;
-    public static $DELETE_USER_TYPE = 42;
+    
 
-    public static $LIST_VENDOR_CATEGORY = 43;
+    /*public static $LIST_VENDOR_CATEGORY = 43;
     public static $ADD_VENDOR_CATEGORY = 44;
     public static $EDIT_VENDOR_CATEGORY = 45;
-    public static $DELETE_VENDOR_CATEGORY = 46;
+    public static $DELETE_VENDOR_CATEGORY = 46;*/
 
-    public static $LIST_VENDOR = 47;
+    /*public static $LIST_VENDOR = 47;
     public static $ADD_VENDOR = 48;
     public static $EDIT_VENDOR = 49;
     public static $DELETE_VENDOR = 50;
     public static $VIEW_VENDOR = 51;
-    public static $CHANGE_VENDOR_STATUS = 52;
+    public static $CHANGE_VENDOR_STATUS = 52;*/
     
     public static $LIST_PORTFOLIO = 53;
     public static $ADD_PORTFOLIOS = 54;
@@ -112,6 +109,24 @@ class Admin extends Authenticatable
     public static $ADD_PACKAGES = 66;
     public static $EDIT_PACKAGES = 67;
     public static $DELETE_PACKAGES = 68;
+
+    public static $LIST_VENDOR = 69;
+    public static $ADD_VENDOR = 70;
+    public static $EDIT_VENDOR = 71;
+    public static $DELETE_VENDOR = 72;
+    public static $VIEW_VENDOR = 73;
+    public static $CHANGE_VENDOR_STATUS = 74;
+
+    public static $LIST_VENDOR_CATEGORY = 75;
+    public static $ADD_VENDOR_CATEGORY = 76;
+    public static $EDIT_VENDOR_CATEGORY = 77;
+    public static $DELETE_VENDOR_CATEGORY = 78;
+
+    public static $LIST_USER_TYPE = 79;
+    public static $ADD_USER_TYPE = 80;
+    public static $EDIT_USER_TYPE = 81;
+    public static $DELETE_USER_TYPE = 82;
+
 
 
 

@@ -80,11 +80,15 @@ Route::group(['prefix' => $ADMIN_PREFIX], function(){
 	Route::any('users/data', 'admin\UsersController@data')->name('users.data');
  	Route::resource('users', 'admin\UsersController');
 
+    //User Types
  	Route::any('user-types/data', 'admin\UserTypesController@data')->name('user-types.data');
  	Route::resource('user-types', 'admin\UserTypesController');
+ 
+ 	//Vendor Category
  	Route::any('vendor-categories/data', 'admin\VendorCategoriesController@data')->name('vendor-categories.data');
  	Route::resource('vendor-categories', 'admin\VendorCategoriesController');
 
+ 	//Vendors
 	Route::any('vendors/change-status/{id}/{status}', 'admin\VendorsController@changeStatus');
 	Route::any('vendors/view', 'admin\VendorsController@viewData');
 	Route::any('vendors/data', 'admin\VendorsController@data')->name('vendors.data');
@@ -108,6 +112,7 @@ Route::group(['prefix' => $ADMIN_PREFIX], function(){
 
  	Route::any('email/data', 'admin\EmailTemplateController@data')->name('email.data');
  	Route::resource('email', 'admin\EmailTemplateController');
+
 
     });    
 });

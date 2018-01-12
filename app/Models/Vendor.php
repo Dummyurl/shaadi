@@ -8,19 +8,13 @@ use Cviebrock\EloquentSluggable\Sluggable;
 
 class Vendor extends Model
 {
-	use Sluggable;
+	protected $table = TBL_VENDOR;
+     
+    protected $fillable = ['user_id','vendor_category_id'];
 
-    public function sluggable()
+    public function VendorCategory()
     {
-        return [
-            'slug' => [
-                'source' => array('firstname','lastname'),
-                'on_update' => true
-            ]
-        ];
-    }   
-
-    protected $table = TBL_VENDOR;
-    protected $fillable = ['user_type_id','vendor_category_id','name','firstname','lastname','email','password','city_id','address','phone','status'];
+        return $this->belongsTo(\App\Models\VendorCategory::class)->withTrashed();
+    }
 
 }

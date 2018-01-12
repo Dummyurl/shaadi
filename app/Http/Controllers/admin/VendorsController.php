@@ -15,6 +15,7 @@ use App\Models\State;
 use App\Models\Country;
 use App\Models\UserType;
 use App\Models\Vendor;
+use App\Models\User;
 
 class VendorsController extends Controller
 {
@@ -48,11 +49,18 @@ class VendorsController extends Controller
      */
     public function index()
     {
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$LIST_VENDOR);
+        
+        if($checkrights) 
+        {
+            return $checkrights;
+        }
+        
         $data = array();        
         $data['page_title'] = "Manage Vendors";
 
         $data['add_url'] = route($this->moduleRouteText.'.create');
-        $data['btnAdd'] = \App\Models\Admin::isAccess(\App\Models\Admin::$LIST_VENDOR); 
+        $data['btnAdd'] = \App\Models\Admin::isAccess(\App\Models\Admin::$ADD_VENDOR); 
         $data['cityList'] = City::pluck("title","id")->all();
         $data['categoryList'] = VendorCategory::pluck("title","id")->all(); 
                
@@ -131,19 +139,18 @@ class VendorsController extends Controller
         $data = array();
         
         $validator = Validator::make($request->all(), [
-            'user_type_id' => 'required|exists:'.TBL_USER_TYPES.',id',  
-            'vendor_category_id' => 'required|exists:'.TBL_VENDOR_CATEGORY.',id',  
-            'name' => 'required|min:2',
+            //'user_type_id' => 'required|exists:'.TBL_USER_TYPES.',id',  
+            'vendor_category_id' => 'required|exists:'.TBL_VENDOR_CATEGORY.',id',
             'firstname' => 'required|min:2',
             'lastname' => 'required|min:2',
-            'email' => 'required|email|unique:'.TBL_VENDOR.',email',
+            'email' => 'required|email|unique:'.TBL_USERS.',email',
             'password' => 'required|min:4|same:password',
             'password_confirmation' => 'required|same:password',
             'city_id' => 'required|exists:'.TBL_CITY.',id',
             'state_id' => 'required|exists:'.TBL_STATE.',id',
             'country_id' => 'required|exists:'.TBL_COUNTRY.',id',
             'address' => 'required|min:2',
-            'phone' => 'required|numeric',
+            'mobile' => 'required|numeric',
             'status' => ['required', Rule::in([1,0])],
         ]);
         if ($validator->fails())         
@@ -160,9 +167,6 @@ class VendorsController extends Controller
         }         
         else
         {
-            $obj = new Vendor();
-            
-            $user_type_id = $request->get('user_type_id');
             $vendor_category_id = $request->get('vendor_category_id');
             $name = $request->get('name');
             $firstname = $request->get('firstname');
@@ -171,29 +175,38 @@ class VendorsController extends Controller
             $password = $request->get('password');
             $city_id = $request->get('city_id');
             $address = $request->get('address');
-            $phone = $request->get('phone');
+            $mobile = $request->get('mobile');
             $status = $request->get('status');
-            
+
+            if(empty($name)){
+            $name =  $firstname.' '.$lastname;
+            }
             $password =md5($password);
 
-            $obj->user_type_id= $user_type_id;
-            $obj->vendor_category_id= $vendor_category_id;
-            $obj->name= $name;
-            $obj->firstname= $firstname;
-            $obj->lastname= $lastname;
-            $obj->email= $email;
-            $obj->password= $password;
-            $obj->city_id= $city_id;
-            $obj->address= $address;
-            $obj->phone= $phone;
-            $obj->status= $status;
-            $obj->save();
+            $user_obj = new User();
+                $user_obj->user_type_id = VENDOR;
+                $user_obj->name= $name;
+                $user_obj->firstname= $firstname;
+                $user_obj->lastname= $lastname;
+                $user_obj->email= $email;
+                $user_obj->password= $password;
+                $user_obj->city_id= $city_id;
+                $user_obj->address= $address;
+                $user_obj->mobile= $mobile;
+                $user_obj->status= $status;
+                $user_obj->save();
+                $user_id = $user_obj->id;
+
+            $vendor_obj = new Vendor();
+
+            $vendor_obj->user_id= $user_id;
+            $vendor_obj->vendor_category_id = $vendor_category_id;
+            $vendor_obj->save();
             
-            $id = $obj->id;           
+            $id = $vendor_obj->id;           
             
             //store logs detail
-            $params=array();    
-                                    
+            $params=array();
             $params['adminuserid']  = \Auth::guard('admins')->id();
             $params['actionid']     = $this->adminAction->ADD_VENDOR ;
             $params['actionvalue']  = $id;
@@ -232,13 +245,14 @@ class VendorsController extends Controller
         {
             return $checkrights;
         }
-
-        $formObj = $this->modelObj->find($id);
+        $formObj = Vendor::where(TBL_VENDOR.".user_id",$id)
+                ->join(TBL_USERS,TBL_USERS.".id","=",TBL_VENDOR.".user_id")
+                ->first();
 
         if(!$formObj)
         {
             abort(404);
-        }   
+        }
 
         $data = array();
         $data['formObj'] = $formObj;
@@ -247,7 +261,7 @@ class VendorsController extends Controller
 
         $data['action_url'] = $this->moduleRouteText.".update";
         $data['action_params'] = $formObj->id;
-        $data['method'] = "PUT";     
+        $data['method'] = "PUT";
         $data['pass_view'] = 0;     
 
         $data['cityList'] = City::pluck("title","id")->all(); 
@@ -255,7 +269,6 @@ class VendorsController extends Controller
         $data['countryList'] = Country::pluck("title","id")->all(); 
         $data['categoryList'] = VendorCategory::pluck("title","id")->all(); 
         $data['usertypeList'] = UserType::pluck("title","id")->all(); 
-
 
         $cityobj = \App\Models\City::find($formObj->city_id);
         $state_id =$cityobj->state_id;
@@ -285,31 +298,29 @@ class VendorsController extends Controller
         {
             return $checkrights;
         }
-
-        $model = $this->modelObj->find($id);
+        $user_obj = User::find($id);
 
         $status = 1;
         $msg = $this->updateMsg;
         $data = array();        
         
         $validator = Validator::make($request->all(), [            
-            'user_type_id' => 'required|exists:'.TBL_USER_TYPES.',id',  
+            //'user_type_id' => 'required|exists:'.TBL_USER_TYPES.',id',  
             'vendor_category_id' => 'required|exists:'.TBL_VENDOR_CATEGORY.',id',  
-            'name' => 'required|min:2',
+            //'name' => 'required|min:2',
             'firstname' => 'required|min:2',
             'lastname' => 'required|min:2',
-            'email' => 'required|email|unique:'.TBL_VENDOR.',email,'.$id,
+            'email' => 'required|email|unique:'.TBL_USERS.',email,'.$id,
             'city_id' => 'required|exists:'.TBL_CITY.',id',
             'state_id' => 'required|exists:'.TBL_STATE.',id',
             'country_id' => 'required|exists:'.TBL_COUNTRY.',id',
             'address' => 'required|min:2',
-            'phone' => 'required|numeric',
-            'status' => ['required', Rule::in([1,0])],               
-            
+            'mobile' => 'required|numeric',
+            'status' => ['required', Rule::in([1,0])],
         ]);
         
         // check validations
-        if(!$model)
+        if(!$user_obj)
         {
             $status = 0;
             $msg = "Record not found !";
@@ -328,31 +339,37 @@ class VendorsController extends Controller
         }         
         else
         {
-            $obj = Vendor::find($id);
-            
-            $user_type_id = $request->get('user_type_id');
             $vendor_category_id = $request->get('vendor_category_id');
             $name = $request->get('name');
             $firstname = $request->get('firstname');
             $lastname = $request->get('lastname');
             $email = $request->get('email');
+            $password = $request->get('password');
             $city_id = $request->get('city_id');
             $address = $request->get('address');
-            $phone = $request->get('phone');
+            $mobile = $request->get('mobile');
             $status = $request->get('status');
             
-            $obj->user_type_id= $user_type_id;
-            $obj->vendor_category_id= $vendor_category_id;
-            $obj->name= $name;
-            $obj->firstname= $firstname;
-            $obj->lastname= $lastname;
-            $obj->email= $email;
-            $obj->city_id= $city_id;
-            $obj->address= $address;
-            $obj->phone= $phone;
-            $obj->status= $status;
-            $obj->save();
+            if(empty($name)){
+            $name =  $firstname.' '.$lastname;
+            }
+                $user_obj->user_type_id = VENDOR;
+                $user_obj->name= $name;
+                $user_obj->firstname= $firstname;
+                $user_obj->lastname= $lastname;
+                $user_obj->email= $email;
+                $user_obj->city_id= $city_id;
+                $user_obj->address= $address;
+                $user_obj->mobile= $mobile;
+                $user_obj->status= $status;
+                $user_obj->save();
+
+            $vendor_obj = Vendor::where('user_id',$id)->first();
+
+            $vendor_obj->vendor_category_id = $vendor_category_id;
+            $vendor_obj->save();
             
+            $id = $vendor_obj->id;
             //store logs detail
                 $params=array();
                 
@@ -382,13 +399,15 @@ class VendorsController extends Controller
             return $checkrights;
         }
 
-        $modelObj = $this->modelObj->find($id); 
+        $modelObj = User::find($id); 
 
         if($modelObj) 
         {
             try 
             {             
                 $backUrl = $request->server('HTTP_REFERER');
+                $vendor = Vendor::where('user_id',$id)->first();
+                $vendor->delete();
                 $modelObj->delete();
                 session()->flash('success_message', $this->deleteMsg); 
 
@@ -425,29 +444,32 @@ class VendorsController extends Controller
         {
             return $checkrights;
         }
-
-        //$model = Vendor::query();
-
-        $model = Vendor::select(TBL_VENDOR.".*",TBL_VENDOR_CATEGORY.".title as category_name",TBL_CITY.".title as city_name")
+        $model = User::select(TBL_USERS.".*",TBL_VENDOR_CATEGORY.".title as category_name",TBL_CITY.".title as city_name")
+                ->join(TBL_CITY,TBL_CITY.".id","=",TBL_USERS.".city_id")
+                ->join(TBL_VENDOR,TBL_USERS.".id","=",TBL_VENDOR.".user_id")
                 ->join(TBL_VENDOR_CATEGORY,TBL_VENDOR_CATEGORY.".id","=",TBL_VENDOR.".vendor_category_id")
-                ->join(TBL_CITY,TBL_CITY.".id","=",TBL_VENDOR.".city_id");
+                ->where(TBL_USERS.'.user_type_id','=',VENDOR);
 
-
-        return Datatables::eloquent($model)        
-               
-            ->addColumn('action', function(Vendor $row) {
+        return Datatables::eloquent($model)
+            
+            ->editColumn('status', function ($row) {
+                if ($row->status == 1)
+                    return "<a class='btn btn-xs btn-success'>Acive</a>";
+                else
+                    return '<a class="btn btn-xs btn-danger">Inactive</a>';
+                }) 
+            ->addColumn('action', function(User $row) {
                 return view("admin.vendors.actions",
                     [
                         'currentRoute' => $this->moduleRouteText,
                         'row' => $row,                                 
-                        'isView' =>\App\Models\Admin::isAccess(\App\Models\Admin::$VIEW_VENDOR),
-                        'isStatus' =>\App\Models\Admin::isAccess(\App\Models\Admin::$CHANGE_VENDOR_STATUS),
+                        'isView' =>\App\Models\Admin::isAccess(\App\Models\Admin::$EDIT_VENDOR),
+                        'isStatus' =>\App\Models\Admin::isAccess(\App\Models\Admin::$EDIT_VENDOR),
                         'isEdit' =>\App\Models\Admin::isAccess(\App\Models\Admin::$EDIT_VENDOR),
                         'isDelete' => \App\Models\Admin::isAccess(\App\Models\Admin::$DELETE_VENDOR),                                                         
                     ]
                 )->render();
             })
-
             ->editColumn('created_at', function($row){
                 
                 if(!empty($row->created_at))          
@@ -455,10 +477,7 @@ class VendorsController extends Controller
                 else
                     return '-';    
             })
-            /*->editColumn('status', function($row){
-                return view('admin.partials.status',['status'=>$row->status]);
-            })*/ 
-                        
+            ->rawColumns(['status','action'])           
             ->filter(function ($query) 
             {                                                    
                 $search_start_date = request()->get("search_start_date"); 
@@ -485,24 +504,24 @@ class VendorsController extends Controller
                 }
                 if(!empty($search_category))
                 {
-                    $query = $query->where("vendor_category_id",$search_category);
+                    $query = $query->where(TBL_VENDOR.".vendor_category_id",$search_category);
                 }  
                 if(!empty($search_name))
                 {
-                    $query = $query->where("name", 'LIKE', '%'.$search_name.'%');
+                    $query = $query->where(TBL_USERS.".name", 'LIKE', '%'.$search_name.'%');
                 }
                 if(!empty($search_email))
                 {
-                    $query = $query->where("email", 'LIKE', '%'.$search_email.'%');
+                    $query = $query->where(TBL_USERS.".email", 'LIKE', '%'.$search_email.'%');
                 }
                 if(!empty($search_city))
                 {
-                    $query = $query->where("city_id", $search_city);
+                    $query = $query->where(TBL_USERS.".city_id", $search_city);
                 }
-                if(!empty($search_status))
-                {
-                    $query = $query->where("status",$search_status);
-                }
+                if($search_status == "1" || $search_status == "0")
+                    {
+                        $query = $query->where(TBL_USERS.".status", $search_status);
+                    }
 
             })
             ->make(true);        
@@ -510,7 +529,7 @@ class VendorsController extends Controller
 
     public function viewData(Request $request)
     {     
-        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$VIEW_VENDOR);
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$EDIT_VENDOR);
         
         if($checkrights) 
         {
@@ -521,21 +540,25 @@ class VendorsController extends Controller
 
         if(!empty($id)){
             
-            $vendor  = $this->modelObj->find($id);
+            $vendor = User::where(TBL_USERS.".id",$id)
+                ->join(TBL_VENDOR,TBL_USERS.".id","=",TBL_VENDOR.".user_id")
+                ->join(TBL_VENDOR_CATEGORY,TBL_VENDOR_CATEGORY.".id","=",TBL_VENDOR.".vendor_category_id")
+                ->first();
+
         }
         return view("admin.vendors.viewData", ['views'=>$vendor]);
     }
 
     public function changeStatus($id, $status, Request $request)
     {
-        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$CHANGE_VENDOR_STATUS);
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$EDIT_VENDOR);
         
         if($checkrights) 
         {
             return $checkrights;
         }
 
-        $vendor = \App\Models\Vendor::find($id);
+        $vendor = \App\Models\User::find($id);
         if($vendor){
 
             if($status==1) {

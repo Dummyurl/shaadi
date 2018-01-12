@@ -18,39 +18,46 @@
                     <div class="portlet-body">
                         <div class="form-body">
                            {!! Form::model($formObj,['method' => $method,'files' => true, 'route' => [$action_url,$action_params],'class' => 'sky-form form form-group', 'id' => 'main-frm']) !!} 
-                           
-                                <div class="row">                                           
-                                    <div class="col-md-6">
-                                        <label class="control-label">User Type: <span class="required">*</span></label>                              
-                                        {!! Form::select('user_type_id', [''=>'Select User Type'] + $usertypeList, null, ['class' => 'form-control', 'data-required' => 'true']) !!}
-                                    </div>
+
+                                <div class="row">
+
                                     <div class="col-md-6">
                                         <label class="control-label">Category: <span class="required">*</span></label>                                        
                                         {!! Form::select('vendor_category_id', [''=>'Select Category'] + $categoryList, null, ['class' => 'form-control', 'data-required' => 'true']) !!}
                                     </div>
-                            </div>
+                                    <div class="col-md-6">
+                                        <label class="control-label">Status: <span class="required">*</span></label>                                        
+                                        {!! Form::select('status',['1'=>'Active','2'=>'Inactive'],null,['class' => 'form-control', 'data-required' => true]) !!}
+                                    </div>
+                                </div>
                                 <div class="clearfix">&nbsp;</div>
-
+                            <fieldset class="scheduler-border">
+                                <legend class="scheduler-border">Personal Details</legend>
+                            
                                 <div class="row">                                           
                                     <div class="col-md-4">
-                                        <label class="control-label">Name: <span class="required">*</span></label>                                        
-                                        {!! Form::text('name',null,['class' => 'form-control', 'data-required' => true,'placeholder' => 'Enter Name']) !!}
+                                        <label class="control-label">Name: </label>
+                                        {!! Form::text('name',null,['class' => 'form-control', 'data-required' => false,'placeholder' => 'Enter Name']) !!}
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="control-label">First Name: <span class="required">*</span></label>                                        
+                                        <label class="control-label">First Name: <span class="required">*</span></label>
                                         {!! Form::text('firstname',null,['class' => 'form-control', 'data-required' => true,'placeholder' => 'Enter First Name']) !!}
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="control-label">Last Name: <span class="required">*</span></label>                                        
+                                        <label class="control-label">Last Name: <span class="required">*</span></label>
                                         {!! Form::text('lastname',null,['class' => 'form-control', 'data-required' => true,'placeholder' => 'Enter Last Name']) !!}
                                     </div>
                                 </div>
-                                <div class="clearfix">&nbsp;</div>  
-
+                                <div class="clearfix">&nbsp;</div>
                                 <div class="row">                                           
                                     <div class="col-md-4">
-                                        <label class="control-label">Email: <span class="required">*</span></label>                                        
+                                        <label class="control-label">Email: <span class="required">*</span></label> 
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-envelope"></i>
+                                            </span>
                                         {!! Form::text('email',null,['class' => 'form-control', 'data-required' => true,'placeholder' => 'Enter Email Address']) !!}
+                                        </div>
                                     </div>
                                     @if($pass_view == 1)
                                     <div class="col-md-4">
@@ -58,14 +65,16 @@
                                         {!! Form::password('password',['class' => 'form-control', 'data-required' => true,'placeholder' => 'Enter Password']) !!}
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="control-label">re-type Password: <span class="required">*</span></label>                                        
+                                        <label class="control-label">re-type Password: <span class="required">*</span></label>
                                         {!! Form::password('password_confirmation',['class' => 'form-control', 'data-required' => true,'placeholder' => 'Enter re-type Password']) !!}
                                     </div>
                                     @endif
-                            </div><hr/>
-                                
-                                <div class="clearfix">&nbsp;</div>
-                            <div class="row">                                           
+                                </div>
+                            </fieldset>
+                            <div class="clearfix">&nbsp;</div>
+                            <fieldset class="scheduler-border">
+                                <legend class="scheduler-border">Location Details</legend>
+                                <div class="row">                                           
                                     <div class="col-md-4">
                                         <label class="control-label">Country: <span class="required">*</span></label>                                        
                                         {!! Form::select('country_id', [''=>'Select Country'] + $countryList, null, ['class' => 'form-control', 'data-required' => 'true','id' => 'cid']) !!}                                     
@@ -78,25 +87,21 @@
                                         <label class="control-label">City: <span class="required">*</span></label>                                        
                                         {!! Form::select('city_id', [''=>'Select City'] + $cityList, null, ['class' => 'form-control all_city','data-required' => 'true']) !!}
                                     </div>
-                            </div>
-                            <div class="clearfix">&nbsp;</div>  
-                            <div class="row">                                           
+                                </div>
+                                <div class="clearfix">&nbsp;</div>  
+                                <div class="row">                                           
                                     <div class="col-md-4">
                                         <label class="control-label">Address: <span class="required">*</span></label>                                        
                                         {!! Form::textarea('address',null,['class' => 'form-control', 'data-required' => true,'placeholder' => 'Enter Address','rows'=>'4']) !!}
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="control-label">Contact No: <span class="required">*</span></label>                             
-                                        {!! Form::text('phone',null,['class' => 'form-control', 'data-required' => true,'placeholder' => 'Enter Contact Number']) !!}
+                                        <label class="control-label">Mobile No: <span class="required">*</span></label>                             
+                                        {!! Form::text('mobile',null,['class' => 'form-control', 'data-required' => true,'placeholder' => 'Enter Contact Number']) !!}
                                     </div>
-                                    <div class="col-md-4">
-                                        <label class="control-label">Status: <span class="required">*</span></label>                                        
-                                        {!! Form::select('status',['1'=>'Active','2'=>'Inactive'],null,['class' => 'form-control', 'data-required' => true]) !!}
-                                    </div>
-                            </div>
+                                </div>
+                                </fieldset>
                                 <div class="clearfix">&nbsp;</div>
-                                 
-                            <div class="row">
+                                <div class="row">
                                     <div class="col-md-12">
                                         <input type="submit" value="Save" class="btn btn-success pull-right" />
                                     </div>
@@ -110,10 +115,28 @@
     </div>
 </div>            
 
-
 @endsection
 
 @section('scripts')
+<style type="text/css">
+fieldset.scheduler-border 
+{
+    border: 1px groove #ddd !important;
+    padding: 0 1.4em 1.4em 1.4em !important;
+    margin: 0 0 1.5em 0 !important;
+    -webkit-box-shadow:  0px 0px 0px 0px #000;
+            box-shadow:  0px 0px 0px 0px #000;
+}
+legend.scheduler-border 
+{
+    font-size: 1.2em !important;
+    font-weight: bold !important;
+    text-align: left !important;
+    width:auto;
+    padding:0 10px;
+    border-bottom:none;
+}
+</style>
 <script src="{{ asset('js/jquery.bootstrap-growl.min.js') }}" type="text/javascript"></script>
 <script type="text/javascript">
    

@@ -44,6 +44,13 @@ class UserTypesController extends Controller
      */
     public function index()
     {
+        $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$LIST_USER_TYPE);
+        
+        if($checkrights) 
+        {
+            return $checkrights;
+        }
+
         $data = array();        
         $data['page_title'] = "Manage User Types";
 
@@ -152,7 +159,7 @@ class UserTypesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-     public function edit($id, Request $request)
+    public function edit($id, Request $request)
     {
         $checkrights = \App\Models\Admin::checkPermission(\App\Models\Admin::$EDIT_USER_TYPE);
         

@@ -67,11 +67,7 @@ class AdminAction extends Model
     
     public $ADD_ADMIN_USERS = 27;
     public $EDIT_ADMIN_USERS = 28;
-    public $DELETE_ADMIN_USERS = 29;  
-
-    public $ADD_USER_TYPE = 30;   
-    public $EDIT_USER_TYPE = 31;   
-    public $DELETE_USER_TYPE = 32;  
+    public $DELETE_ADMIN_USERS = 29; 
 
     public $ADD_VENDOR_CATEGORY = 33;   
     public $EDIT_VENDOR_CATEGORY = 34;   
@@ -95,6 +91,14 @@ class AdminAction extends Model
     public $DELETE_PACKAGE_CATEGORIES = 48;   
     
     public $ADD_PACKAGES = 49;   
-    public $EDIT_PACKAGES = 50;   
-    public $DELETE_PACKAGES = 51;   
+    public $EDIT_PACKAGES = 50;    
+    public $DELETE_PACKAGES = 51;  
+
+    public $ADD_USER_TYPE = 52;   
+    public $EDIT_USER_TYPE = 53;   
+    public $DELETE_USER_TYPE = 54;
+
+    public static $ADD_USERS = 55;
+    public static $EDIT_USERS = 56; 
+    public static $DELETE_USERS = 57;
 }
